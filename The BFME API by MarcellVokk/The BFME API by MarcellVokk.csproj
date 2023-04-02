@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <RootNamespace>The_BFME_API_by_MarcellVokk</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Title>The BFME API by MarcellVokk</Title>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Network\RuntimeResources\tap-windows\x64\zttap300.cat" />
+    <None Remove="Network\RuntimeResources\tap-windows\x64\zttap300.inf" />
+    <None Remove="Network\RuntimeResources\tap-windows\x64\zttap300.sys" />
+    <None Remove="Network\RuntimeResources\zerotier-one.port" />
+    <None Remove="Network\RuntimeResources\zerotier-one_x64.exe" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Network\RuntimeResources\tap-windows\x64\zttap300.cat" />
+    <EmbeddedResource Include="Network\RuntimeResources\tap-windows\x64\zttap300.inf" />
+    <EmbeddedResource Include="Network\RuntimeResources\tap-windows\x64\zttap300.sys" />
+    <EmbeddedResource Include="Network\RuntimeResources\zerotier-one.port" />
+    <EmbeddedResource Include="Network\RuntimeResources\zerotier-one_x64.exe" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="BFME1\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="System.ServiceProcess.ServiceController" Version="7.0.0" />
+  </ItemGroup>
+
+</Project>

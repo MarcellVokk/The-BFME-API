@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33205.214
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "The BFME API by MarcellVokk", "The BFME API by MarcellVokk\The BFME API by MarcellVokk.csproj", "{351C1116-5BE9-42F0-9E27-AE29525768ED}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example", "Example\Example.csproj", "{FA73756B-5884-46D5-AE25-7DE678C61B32}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{351C1116-5BE9-42F0-9E27-AE29525768ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{351C1116-5BE9-42F0-9E27-AE29525768ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{351C1116-5BE9-42F0-9E27-AE29525768ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{351C1116-5BE9-42F0-9E27-AE29525768ED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA73756B-5884-46D5-AE25-7DE678C61B32}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA73756B-5884-46D5-AE25-7DE678C61B32}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA73756B-5884-46D5-AE25-7DE678C61B32}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA73756B-5884-46D5-AE25-7DE678C61B32}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C2AFBD30-6C83-4DA7-B5CB-2EEB2E956181}
+	EndGlobalSection
+EndGlobal
