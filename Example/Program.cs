@@ -23,8 +23,6 @@ namespace Example
 
             Console.WriteLine("The program completed successfuly! Press return to exit.");
             Console.ReadLine();
-
-            await BfmeClient.CloseGame();
         }
 
         static async Task NetworkDemo()
