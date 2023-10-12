@@ -1,154 +1,80 @@
 ﻿using System.Drawing;
-using System.Windows.Forms;
 using The_BFME_API_by_MarcellVokk.Logging;
 
 namespace The_BFME_API_by_MarcellVokk.BFME1
 {
-    public static class ConfigManager
+    internal static class ConfigManager
     {
-        private static Dictionary<string, string> CurentConfig = new Dictionary<string, string>();
-        private static Dictionary<string, Point[]> CurentMapSpotConfig = new Dictionary<string, Point[]>();
+        private static Dictionary<string, Point> Buttons = new Dictionary<string, Point>();
+        private static Dictionary<string, Point[]> Spots = new Dictionary<string, Point[]>();
 
-        public static bool IsCurentGameResolutionSupported()
+        public static void Load()
         {
-            Size resolution = ResolutionManager.GetResolutionFromSettings();
+            Logger.LogDiagnostic("Loading config...", "ConfigManager");
 
-            return IsResolutionSupported(resolution);
-        }
-
-        public static void SwitchToClosestSupportedResolution()
-        {
-            ResolutionManager.SetResolution(GetClosestSupportedResolutionToCurent());
-        }
-
-        public static Size GetClosestSupportedResolutionToCurent()
-        {
-            Size curentUnsuportedResolution = ResolutionManager.GetResolutionFromSettings();
-
-            double difference = double.MaxValue;
-            Size newSupportedResolution = new Size(0, 0);
-
-            foreach (Size resolution in GetSupportedResolutions())
+            Buttons.Clear();
+            using (StreamReader sr = new StreamReader($@".\BFME1\bfme_api_resources\buttons.conf"))
             {
-                if (Math.Abs(resolution.Width - curentUnsuportedResolution.Width) + Math.Abs(resolution.Height - curentUnsuportedResolution.Height) < difference)
+                string configRaw = sr.ReadToEnd();
+
+                foreach (string entry in configRaw.Split('\n'))
                 {
-                    difference = Math.Abs(resolution.Width - curentUnsuportedResolution.Width) + Math.Abs(resolution.Height - curentUnsuportedResolution.Height);
-                    newSupportedResolution = resolution;
-                }
-            }
-
-            return newSupportedResolution;
-        }
-
-        public static bool IsResolutionSupported(Size resolution)
-        {
-            return Directory.Exists($@".\BFME1\bfme_api_resources\{resolution.Width}x{resolution.Height}");
-        }
-
-        public static List<Size> GetSupportedResolutions()
-        {
-            List<Size> result = new List<Size>();
-
-            foreach(string? dir in Directory.GetDirectories($@".\BFME1\bfme_api_resources").Select(x => Path.GetFileNameWithoutExtension(x)))
-            {
-                if(dir != null && dir.Split('x').Length > 1)
-                {
-                    if(int.TryParse(dir.Split('x')[0], out int width) && int.TryParse(dir.Split('x')[1], out int height))
+                    if (entry.Split(" = ").Length > 1 && !Buttons.ContainsKey(entry.Split(" = ")[0]))
                     {
-                        result.Add(new Size(width, height));
+                        Buttons.Add(entry.Split(" = ")[0], new Point(int.Parse(entry.Split(" = ")[1].Split(' ')[0]), int.Parse(entry.Split(" = ")[1].Split(' ')[1])));
                     }
                 }
             }
 
-            return result;
-        }
-
-        public static void ReloadConfig()
-        {
-            Dictionary<string, string> newConfig = new Dictionary<string, string>();
-
-            if (IsCurentGameResolutionSupported())
+            Spots.Clear();
+            using (StreamReader sr = new StreamReader($@".\BFME1\bfme_api_resources\map_spots.conf"))
             {
-                Size curentResolution = ResolutionManager.GetResolutionFromSettings();
-                string resolutionId = $"{curentResolution.Width}x{curentResolution.Height}";
+                string configRaw = sr.ReadToEnd();
 
-                using (StreamReader sr = new StreamReader($@".\BFME1\bfme_api_resources\{resolutionId}\config.conf"))
+                string curentMap = "";
+                List<Point> curentMapSpots = new List<Point>();
+
+                foreach (string entry in configRaw.Split('\n'))
                 {
-                    string configRaw = sr.ReadToEnd();
-
-                    foreach (string entry in configRaw.Split('\n'))
+                    if (entry.Contains("map"))
                     {
-                        if (entry.Split(" = ").Length > 1 && !newConfig.ContainsKey(entry.Split(" = ")[0]))
-                        {
-                            newConfig.Add(entry.Split(" = ")[0], entry.Split(" = ")[1]);
-                        }
+                        curentMap = entry.Replace("\r", "");
                     }
+                    else if (entry.Split(' ').Length == 2)
+                    {
+                        curentMapSpots.Add(new Point(int.Parse(entry.Split(' ')[0]), int.Parse(entry.Split(' ')[1])));
+                    }
+                    else
+                    {
+                        Spots.Add(curentMap, curentMapSpots.ToArray());
+                        curentMapSpots.Clear();
+                    }
+                }
+
+                if (curentMapSpots.Count > 0)
+                {
+                    Spots.Add(curentMap.ToString(), curentMapSpots.ToArray());
                 }
             }
 
-            CurentConfig = newConfig;
+            Logger.LogDiagnostic("Loading config... DONE!", "ConfigManager");
         }
 
-        public static void ReloadMapSpotConfig()
+        public static Point GetPosFromConfig(string key, Point? offset = null)
         {
-            Dictionary<string, Point[]> newMapSpotConfig = new Dictionary<string, Point[]>();
-
-            if (IsCurentGameResolutionSupported())
-            {
-                using (StreamReader sr = new StreamReader($@".\BFME1\bfme_api_resources\map_spots.conf"))
-                {
-                    string configRaw = sr.ReadToEnd();
-
-                    string curentMap = "";
-                    List<Point> curentMapSpots = new List<Point>();
-
-                    foreach (string entry in configRaw.Split('\n'))
-                    {
-                        if (entry.Contains("map"))
-                        {
-                            curentMap = entry.Replace("\r", "");
-                        }
-                        else if (entry.Split(' ').Length == 2)
-                        {
-                            curentMapSpots.Add(new Point(int.Parse(entry.Split(' ')[0]), int.Parse(entry.Split(' ')[1])));
-                        }
-                        else
-                        {
-                            newMapSpotConfig.Add(curentMap, curentMapSpots.ToArray());
-                            curentMapSpots.Clear();
-                        }
-                    }
-
-                    if (curentMapSpots.Count > 0)
-                    {
-                        newMapSpotConfig.Add(curentMap.ToString(), curentMapSpots.ToArray());
-                    }
-                }
-            }
-
-            CurentMapSpotConfig = newMapSpotConfig;
-        }
-
-        public static Point GetPosFromConfig(string key)
-        {
-            string data = CurentConfig[key];
-            return new Point(int.Parse(data.Split(' ')[0]), int.Parse(data.Split(' ')[1]));
-        }
-
-        public static int GetIntFromConfig(string key)
-        {
-            return int.Parse(CurentConfig[key]);
+            Size curentResolution = GameDataManager.GetCurentResolution();
+            return new Point((int)(Buttons[key].X / 2560d * curentResolution.Width) + (offset != null ? offset.Value.X : 0), (int)(Buttons[key].Y / 1440d * curentResolution.Height) + (offset != null ? offset.Value.Y : 0));
         }
 
         public static Point GetMapSpotFromConfig(string mapId, int spotId)
         {
-            Point ingameMapSize = ConfigManager.GetPosFromConfig("MapSize");
-            Point ingameMapTopLeft = ConfigManager.GetPosFromConfig("MapTopLeft");
+            Point ingameMapSize = GetPosFromConfig("MapSize");
+            Point ingameMapTopLeft = GetPosFromConfig("MapTopLeft");
 
             double scaleFactor_x = ingameMapSize.X / 346d;
             double scaleFactor_y = ingameMapSize.Y / 260d;
 
-            Point result = CurentMapSpotConfig[mapId.Replace("_20nm_", "_")][spotId - 1];
+            Point result = Spots[mapId.Replace("_20nm_", "_")][spotId - 1];
 
             return new Point((int)(result.X * scaleFactor_x) + ingameMapTopLeft.X, (int)(result.Y * scaleFactor_y) + ingameMapTopLeft.Y);
         }

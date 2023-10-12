@@ -1,23 +1,13 @@
-using Gma.System.MouseKeyHook;
-using System.Diagnostics;
-using System.Runtime.InteropServices;
 using The_BFME_API_by_MarcellVokk.BFME1;
-using The_BFME_API_by_MarcellVokk.Network;
 
 namespace GameExample
 {
     class Program
     {
-        [DllImport("kernel32.dll", SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        static extern bool AllocConsole();
-
         public static async Task Main(string[] args)
         {
-            AllocConsole();
-
             // Initialize the logger
-            The_BFME_API_by_MarcellVokk.Logging.Logger.OnDiagnostic += Logger_OnDiagnostic;
+            The_BFME_API_by_MarcellVokk.Logging.Logger.OnDiagnostic += (s, e) => { Console.WriteLine(e); };
 
             // This function demonstrates the BFME1 client interface portion of the API, and explains how to use it
             await Bfme1ClientDemo();
@@ -26,17 +16,13 @@ namespace GameExample
             Console.ReadLine();
         }
 
-        private static void Logger_OnDiagnostic(object? sender, string e)
-        {
-            Console.WriteLine(e);
-        }
-
         static async Task Bfme1ClientDemo()
         {
             // This is just a demonstration, for the actual networking to work, you'd use the networking portion of the API
             // To create a room and put all the participating players in the same network before you start launching the game.
 
             Bfme1Client gameClient = new Bfme1Client();
+            gameClient.CancelationAssertion = CancellationAssertion;
             gameClient.Username = "Hello world";
             gameClient.PlayerColor = 8;
             gameClient.MapId = "maps_5Cmap_20mp_20carnen_5Cmap_20mp_20carnen_2Emap";
@@ -59,12 +45,11 @@ namespace GameExample
                 // And only the host can start the game obviously...
                 gameClient.StartGame();
 
-                // Detect winner
+                Console.WriteLine($"Waiting for win screen to apear (EXPERIMENTAL)...");
+
+                // Detect winner (EXPERIMENTAL)
                 // WARNING: This only detects winners, and does not exit on defeat (so it just blocks the thread).
                 //          You'd cancel this from the cancelation assertion once you know the other team has already won or the game is over.
-
-                Console.WriteLine($"Waiting for win screen to apear...");
-
                 await gameClient.WaitForWinScreen();
 
                 Console.WriteLine("You won the game!");

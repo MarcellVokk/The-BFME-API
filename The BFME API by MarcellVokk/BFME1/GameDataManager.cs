@@ -1,9 +1,32 @@
 ﻿using Microsoft.Win32;
+using System.Drawing;
+using The_BFME_API_by_MarcellVokk.Logging;
 
 namespace The_BFME_API_by_MarcellVokk.BFME1
 {
-    public static class GameConfigManager
+    internal static class GameDataManager
     {
+        public static string GetGameInstallDirectory()
+        {
+            try
+            {
+                RegistryKey? key = Registry.LocalMachine.OpenSubKey(@$"SOFTWARE\WOW6432Node\Electronic Arts\EA Games\The Battle for Middle-earth", false);
+
+                if (key != null)
+                {
+                    string result = key.GetValue("InstallPath") as string;
+                    key.Close();
+                    return result;
+                }
+            }
+            catch
+            {
+                return "C:/";
+            }
+
+            return "C:/";
+        }
+
         public static string GetGameLanguage()
         {
             try
@@ -46,27 +69,40 @@ namespace The_BFME_API_by_MarcellVokk.BFME1
             return "My Battle for Middle-earth Files";
         }
 
-        public static bool IsGameInstalled()
+        public static Size GetCurentResolution()
         {
+            Dictionary<string, string> settings = new Dictionary<string, string>();
+
             try
             {
-                RegistryKey? key = Registry.LocalMachine.OpenSubKey(@$"SOFTWARE\WOW6432Node\Electronic Arts\EA Games\The Battle for Middle-earth", false);
-
-                if (key != null)
+                using (StreamReader sr = new StreamReader(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), GameDataManager.GetGameUserDataFolderName(), "Options.ini")))
                 {
-                    return true;
+                    foreach (string entry in sr.ReadToEnd().Split('\n'))
+                    {
+                        if (entry != "")
+                        {
+                            settings.Add(entry.Split(" = ")[0], entry.Split(" = ")[1]);
+                        }
+                    }
                 }
             }
             catch
             {
-                
+
             }
 
-            return false;
+            if (settings.ContainsKey("Resolution"))
+            {
+                return new Size(int.Parse(settings["Resolution"].Split(' ')[0]), int.Parse(settings["Resolution"].Split(' ')[1]));
+            }
+
+            return new Size(0, 0);
         }
 
         public static void SetPlayerSettings(string mapId, int armyId, string username, int color)
         {
+            Logger.LogDiagnostic("Updating Network.ini...", "GameDataManager");
+
             if (armyId == 1)
             {
                 armyId = -1;
@@ -100,6 +136,8 @@ namespace The_BFME_API_by_MarcellVokk.BFME1
             {
                 sw.Write(string.Join('\n', settings.Select(x => $"{x.Key} = {x.Value}")));
             }
+
+            Logger.LogDiagnostic("Updating Network.ini... DONE!", "GameDataManager");
         }
     }
 }

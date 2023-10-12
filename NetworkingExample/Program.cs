@@ -1,33 +1,19 @@
-﻿using System.Diagnostics;
-using System.Runtime.InteropServices;
-using The_BFME_API_by_MarcellVokk.BFME1;
-using The_BFME_API_by_MarcellVokk.Network;
+﻿using The_BFME_API_by_MarcellVokk.Network;
 
 namespace NetworkingExample
 {
     class Program
     {
-        [DllImport("kernel32.dll", SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        static extern bool AllocConsole();
-
         public static async Task Main(string[] args)
         {
-            AllocConsole();
-
             // Initialize the logger
-            The_BFME_API_by_MarcellVokk.Logging.Logger.OnDiagnostic += Logger_OnDiagnostic;
+            The_BFME_API_by_MarcellVokk.Logging.Logger.OnDiagnostic += (s, e) => { Console.WriteLine(e); };
 
             // This function demonstrates the networking portion of the API, and explains how to use it
             await NetworkDemo();
 
             Console.WriteLine("The program completed successfuly! Press return to exit.");
             Console.ReadLine();
-        }
-
-        private static void Logger_OnDiagnostic(object? sender, string e)
-        {
-            Console.WriteLine(e);
         }
 
         static async Task NetworkDemo()
