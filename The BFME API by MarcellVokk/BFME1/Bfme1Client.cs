@@ -2,7 +2,6 @@
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Windows.Forms;
 using The_BFME_API_by_MarcellVokk.Logging;
 
 namespace The_BFME_API_by_MarcellVokk.BFME1
@@ -24,12 +23,11 @@ namespace The_BFME_API_by_MarcellVokk.BFME1
         {
             IsHost = true;
 
-            ConfigManager.ReloadConfig();
-            ConfigManager.ReloadMapSpotConfig();
+            ConfigManager.Load();
 
-            GameConfigManager.SetPlayerSettings(MapId, Army, Username, PlayerColor);
+            GameDataManager.SetPlayerSettings(MapId, Army, Username, PlayerColor);
 
-            await LaunchGame(true);
+            await LaunchGame();
 
             await WaitForMenu1();
             await GoToMultiplayerMenu();
@@ -49,10 +47,9 @@ namespace The_BFME_API_by_MarcellVokk.BFME1
         {
             IsHost = false;
 
-            ConfigManager.ReloadConfig();
-            ConfigManager.ReloadMapSpotConfig();
+            ConfigManager.Load();
 
-            GameConfigManager.SetPlayerSettings(MapId, Army, Username, PlayerColor);
+            GameDataManager.SetPlayerSettings(MapId, Army, Username, PlayerColor);
 
             await LaunchGame();
 
@@ -77,7 +74,6 @@ namespace The_BFME_API_by_MarcellVokk.BFME1
                 Logger.LogDiagnostic("Tried to start the game while not host...", "Bfme1Client");
             }
 
-            ConfigManager.ReloadConfig();
             InputHelper.Click(ConfigManager.GetPosFromConfig("ButtonStartGame"));
 
             await Task.Run(() => Thread.Sleep(10000));
@@ -91,13 +87,6 @@ namespace The_BFME_API_by_MarcellVokk.BFME1
                     while (gameStartFailTimeout.Elapsed.TotalSeconds < 5)
                     {
                         CancelationAssertion?.Invoke();
-
-                        if (ComputerVisionManager.IsStartFailedTextMessageVisible())
-                        {
-                            Thread.Sleep(1000);
-                            StartGame();
-                            return;
-                        }
 
                         Thread.Sleep(100);
                     }
@@ -115,13 +104,15 @@ namespace The_BFME_API_by_MarcellVokk.BFME1
 
         public async Task WaitForWinScreen()
         {
+            Logger.LogDiagnostic("Waiting for Victory screen...", "Bfme1Client");
+
             await Task.Run(() =>
             {
                 while (true)
                 {
                     CancelationAssertion?.Invoke();
 
-                    if (ComputerVisionManager.IsVictoriousTitleVisible())
+                    if (ScreenReader.IsVictoriousTitleVisible())
                     {
                         break;
                     }
@@ -129,6 +120,8 @@ namespace The_BFME_API_by_MarcellVokk.BFME1
                     Thread.Sleep(800);
                 }
             });
+
+            Logger.LogDiagnostic("Waiting for Victory screen... DONE!", "Bfme1Client");
         }
 
         public async Task CloseGame()
@@ -166,33 +159,39 @@ namespace The_BFME_API_by_MarcellVokk.BFME1
 
         private async Task WaitForMenu1()
         {
+            Logger.LogDiagnostic("Waiting for Menu1...", "Bfme1Client");
+
             await Task.Run(() =>
             {
                 while (true)
                 {
                     CancelationAssertion?.Invoke();
 
-                    if (ComputerVisionManager.IsMenu1Visible())
+                    if (ScreenReader.IsMenu1Visible())
                     {
                         return;
                     }
 
-                    Thread.Sleep(1000);
+                    Thread.Sleep(200);
                 }
             });
 
-            await Task.Run(() => Thread.Sleep(500));
+            await Task.Run(() => Thread.Sleep(1100));
+
+            Logger.LogDiagnostic("Waiting for Menu1... DONE!", "Bfme1Client");
         }
 
         private async Task WaitForMenu2()
         {
+            Logger.LogDiagnostic("Waiting for Menu2...", "Bfme1Client");
+
             await Task.Run(() =>
             {
                 while (true)
                 {
                     CancelationAssertion?.Invoke();
 
-                    if (ComputerVisionManager.IsMenu2Visible())
+                    if (ScreenReader.IsMenu2Visible())
                     {
                         return;
                     }
@@ -201,18 +200,22 @@ namespace The_BFME_API_by_MarcellVokk.BFME1
                 }
             });
 
-            await Task.Run(() => Thread.Sleep(500));
+            await Task.Run(() => Thread.Sleep(1100));
+
+            Logger.LogDiagnostic("Waiting for Menu2... DONE!", "Bfme1Client");
         }
 
         private async Task WaitForNetworkMenu()
         {
+            Logger.LogDiagnostic("Waiting for NetworkMenu...", "Bfme1Client");
+
             await Task.Run(() =>
             {
                 while (true)
                 {
                     CancelationAssertion?.Invoke();
 
-                    if (ComputerVisionManager.IsMenuCustomGameLobbyVisible())
+                    if (ScreenReader.IsMenuCustomGameLobbyVisible())
                     {
                         return;
                     }
@@ -221,18 +224,22 @@ namespace The_BFME_API_by_MarcellVokk.BFME1
                 }
             });
 
-            await Task.Run(() => Thread.Sleep(500));
+            await Task.Run(() => Thread.Sleep(1100));
+
+            Logger.LogDiagnostic("Waiting for NetworkMenu... DONE!", "Bfme1Client");
         }
 
         private async Task WaitForIngameNetworkJoined()
         {
+            Logger.LogDiagnostic("Waiting for ingame network to join...", "Bfme1Client");
+
             await Task.Run(() =>
             {
                 while (true)
                 {
                     CancelationAssertion?.Invoke();
 
-                    if (ComputerVisionManager.IsInLobby(IsHost))
+                    if (ScreenReader.IsInLobby())
                     {
                         return;
                     }
@@ -242,14 +249,16 @@ namespace The_BFME_API_by_MarcellVokk.BFME1
             });
 
             await Task.Run(() => Thread.Sleep(500));
+
+            Logger.LogDiagnostic("Waiting for ingame network to join... DONE!", "Bfme1Client");
         }
 
         private async Task GoToMultiplayerMenu()
         {
+            Logger.LogDiagnostic("Going to multiplayer menu...", "Bfme1Client");
+
             await Task.Run(() =>
             {
-                ConfigManager.ReloadConfig();
-
                 InputHelper.Click(ConfigManager.GetPosFromConfig("ButtonMultiplayer"));
                 Thread.Sleep(100);
                 InputHelper.SetMousePos(new Point(0, 0));
@@ -259,10 +268,10 @@ namespace The_BFME_API_by_MarcellVokk.BFME1
 
         private async Task GoToNetworkMenu()
         {
+            Logger.LogDiagnostic("Going to network menu...", "Bfme1Client");
+
             await Task.Run(() =>
             {
-                ConfigManager.ReloadConfig();
-
                 InputHelper.Click(ConfigManager.GetPosFromConfig("ButtonNetwork"));
                 Thread.Sleep(100);
                 InputHelper.SetMousePos(new Point(0, 0));
@@ -272,10 +281,10 @@ namespace The_BFME_API_by_MarcellVokk.BFME1
 
         private async Task CreateGame()
         {
+            Logger.LogDiagnostic("Creating ingame room...", "Bfme1Client");
+
             await Task.Run(() =>
             {
-                ConfigManager.ReloadConfig();
-
                 InputHelper.Click(ConfigManager.GetPosFromConfig("ButtonCreateGame"), 1000);
                 Thread.Sleep(100);
             });
@@ -283,22 +292,15 @@ namespace The_BFME_API_by_MarcellVokk.BFME1
 
         private async Task JoinGame()
         {
-            await Task.Run(async () =>
-            {
-                ConfigManager.ReloadConfig();
+            Logger.LogDiagnostic("Joining ingame room...", "Bfme1Client");
 
+            await Task.Run(() =>
+            {
                 while (true)
                 {
                     CancelationAssertion?.Invoke();
 
-                    if (ComputerVisionManager.IsJoinFailedPopupVisible())
-                    {
-                        await DismissJoinFailedPopup();
-                        await JoinGame();
-                        return;
-                    }
-
-                    if (ComputerVisionManager.IsInLobby(false))
+                    if (ScreenReader.IsInLobby())
                     {
                         return;
                     }
@@ -311,31 +313,13 @@ namespace The_BFME_API_by_MarcellVokk.BFME1
             });
         }
 
-        private async Task DismissJoinFailedPopup()
-        {
-            await Task.Run(() =>
-            {
-                System.Drawing.Size curentResolution = ResolutionManager.GetResolutionFromSettings();
-
-                ConfigManager.ReloadConfig();
-
-                InputHelper.Click(ConfigManager.GetPosFromConfig("ButtonJoinFailedOK"));
-
-                Thread.Sleep(1500);
-
-                InputHelper.Click(new Point(curentResolution.Width - 60, curentResolution.Height - 35));
-
-                Thread.Sleep(500);
-            });
-        }
-
         private async Task SelectTeam()
         {
+            Logger.LogDiagnostic("Selecting team...", "Bfme1Client");
+
             await Task.Run(() =>
             {
-                ConfigManager.ReloadConfig();
-
-                int playerYLocationOnScreen = ComputerVisionManager.GetPlayerYLocationOnScreen();
+                int playerYLocationOnScreen = ScreenReader.GetPlayerYLocationOnScreen();
 
                 for (int i = 0; i <= 5; i++)
                 {
@@ -343,38 +327,39 @@ namespace The_BFME_API_by_MarcellVokk.BFME1
 
                     Thread.Sleep(50);
 
-                    InputHelper.Click(new Point(ConfigManager.GetIntFromConfig("ButtonTeamBaseX"), playerYLocationOnScreen + 15), 20); //ButtonTeamBaseX
+                    InputHelper.Click(new Point(ConfigManager.GetPosFromConfig("TeamButton1").X, playerYLocationOnScreen + 15), 20);
 
                     Thread.Sleep(50);
 
                     switch (Team)
                     {
                         case 1:
-                            InputHelper.Click(new Point(ConfigManager.GetIntFromConfig("ButtonTeamBaseX"), playerYLocationOnScreen + ConfigManager.GetIntFromConfig("ButtonTeam1OffsetY")), 20); //ButtonTeamBaseX, ButtonTeam1OffsetY
+                            InputHelper.Click(ConfigManager.GetPosFromConfig("TeamButton1", new Point(0, playerYLocationOnScreen)), 20);
                             break;
                         case 2:
-                            InputHelper.Click(new Point(ConfigManager.GetIntFromConfig("ButtonTeamBaseX"), playerYLocationOnScreen + ConfigManager.GetIntFromConfig("ButtonTeam2OffsetY")), 20); //ButtonTeamBaseX, ButtonTeam2OffsetY
+                            InputHelper.Click(ConfigManager.GetPosFromConfig("TeamButton2", new Point(0, playerYLocationOnScreen)), 20);
                             break;
                         case 3:
-                            InputHelper.Click(new Point(ConfigManager.GetIntFromConfig("ButtonTeamBaseX"), playerYLocationOnScreen + ConfigManager.GetIntFromConfig("ButtonTeam3OffsetY")), 20); //ButtonTeamBaseX, ButtonTeam3OffsetY
+                            InputHelper.Click(ConfigManager.GetPosFromConfig("TeamButton3", new Point(0, playerYLocationOnScreen)), 20);
                             break;
                         case 4:
-                            InputHelper.Click(new Point(ConfigManager.GetIntFromConfig("ButtonTeamBaseX"), playerYLocationOnScreen + ConfigManager.GetIntFromConfig("ButtonTeam4OffsetY")), 20); //ButtonTeamBaseX, ButtonTeam4OffsetY
+                            InputHelper.Click(ConfigManager.GetPosFromConfig("TeamButton4", new Point(0, playerYLocationOnScreen)), 20);
                             break;
                     }
 
                     Thread.Sleep(50);
                 }
             });
+
+            Logger.LogDiagnostic("Selecting team... DONE!", "Bfme1Client");
         }
 
         private async Task SelectSpot()
         {
+            Logger.LogDiagnostic("Selecting spot...", "Bfme1Client");
+
             await Task.Run(() =>
             {
-                ConfigManager.ReloadConfig();
-                ConfigManager.ReloadMapSpotConfig();
-
                 Point c = ConfigManager.GetMapSpotFromConfig(MapId, Spot);
 
                 if (!IsHost)
@@ -386,36 +371,35 @@ namespace The_BFME_API_by_MarcellVokk.BFME1
             });
 
             await Task.Run(() => Thread.Sleep(500));
+
+            Logger.LogDiagnostic("Selecting spot... DONE!", "Bfme1Client");
         }
 
         private async Task LaunchGame(bool windowed = false)
         {
             await CloseGame();
 
-            if (!Directory.Exists(BaseGameInstallManagger.GameDirectory))
+            if (!Directory.Exists(GameDataManager.GetGameInstallDirectory()))
             {
                 throw new Exception();
             }
 
-            if (!ResolutionManager.IsResolutionSupported(ResolutionManager.GetResolutionFromSettings()))
-            {
-                throw new Exception("The curent resolution is not supported...");
-            }
+            Logger.LogDiagnostic("Launching game...", "Bfme1Client");
 
-            string[] files = Directory.GetFiles(BaseGameInstallManagger.GameDirectory);
+            string[] files = Directory.GetFiles(GameDataManager.GetGameInstallDirectory());
 
             foreach (string file in files.Where(x => Path.GetFileNameWithoutExtension(x) == "_aptpatch"))
             {
-                File.Move(file, Path.Combine(BaseGameInstallManagger.GameDirectory, Path.GetFileNameWithoutExtension(file) + ".inv"), true);
+                File.Move(file, Path.Combine(GameDataManager.GetGameInstallDirectory(), Path.GetFileNameWithoutExtension(file) + ".inv"), true);
             }
 
             await Task.Run(() =>
             {
-                var proc = Process.Start(new ProcessStartInfo { FileName = "netsh", Arguments = $"firewall add allowedprogram program=\"{BaseGameInstallManagger.GameDirectory + @"\game.dat"}\" name=\"The Battle for Middle-earth - 1.09 Launcher\" mode=ENABLE", CreateNoWindow = true });
+                var proc = Process.Start(new ProcessStartInfo { FileName = "netsh", Arguments = $"firewall add allowedprogram program=\"{GameDataManager.GetGameInstallDirectory() + @"\game.dat"}\" name=\"The Battle for Middle-earth - 1.09 Launcher\" mode=ENABLE", CreateNoWindow = true });
                 proc?.WaitForExit();
             });
 
-            ProcessStartInfo info = new ProcessStartInfo(Path.Combine(BaseGameInstallManagger.GameDirectory, GameExecutableName));
+            ProcessStartInfo info = new ProcessStartInfo(Path.Combine(GameDataManager.GetGameInstallDirectory(), GameExecutableName));
             info.ArgumentList.Add("-noshellmap");
 
             if (windowed)
@@ -452,9 +436,12 @@ namespace The_BFME_API_by_MarcellVokk.BFME1
 
                 SetWindowLong(Process.GetProcessesByName("game.dat")[0].MainWindowHandle, GWL_STYLE, (IntPtr)(currentstyle));
 
-                System.Drawing.Size curentResolution = ResolutionManager.GetResolutionFromSettings();
-                SetWindowPos(Process.GetProcessesByName("game.dat")[0].MainWindowHandle, IntPtr.Zero, Screen.PrimaryScreen.Bounds.X, Screen.PrimaryScreen.Bounds.Y, curentResolution.Width, curentResolution.Height, SWP_NOZORDER);
+                Size curentResolution = GameDataManager.GetCurentResolution();
+                Rectangle screen = ScreenReader.GetPrimaryScreenBounds();
+                SetWindowPos(Process.GetProcessesByName("game.dat")[0].MainWindowHandle, IntPtr.Zero, screen.X, screen.Y, curentResolution.Width, curentResolution.Height, SWP_NOZORDER);
             }
+
+            Logger.LogDiagnostic("Launching game... DONE!", "Bfme1Client");
         }
 
         [DllImport("user32.dll")]
