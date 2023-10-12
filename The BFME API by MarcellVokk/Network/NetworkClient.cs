@@ -4,6 +4,7 @@ using System.Net;
 using System.Reflection;
 using System.Security.Principal;
 using System.ServiceProcess;
+using The_BFME_API_by_MarcellVokk.Logging;
 
 namespace The_BFME_API_by_MarcellVokk.Network
 {
@@ -20,7 +21,9 @@ namespace The_BFME_API_by_MarcellVokk.Network
 
             try
             {
-                if(!Directory.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "ZeroTier")))
+                Logger.LogDiagnostic("Extracting self contained ZeroTier binaries...", "NetworkClient");
+
+                if (!Directory.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "ZeroTier")))
                 {
                     Directory.CreateDirectory(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "ZeroTier"));
                 }
@@ -57,11 +60,15 @@ namespace The_BFME_API_by_MarcellVokk.Network
                         }
                     }
                 }
+
+                Logger.LogDiagnostic("Extracting self contained ZeroTier binaries... DONE!", "NetworkClient");
             }
             catch
             {
 
             }
+
+            Logger.LogDiagnostic("Starting ZeroTier service...", "NetworkClient");
 
             Process.Start(new ProcessStartInfo("cmd", @$"/C ""{Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "ZeroTier", "One")}\zerotier-one_x64.exe"" -I") { CreateNoWindow = true })?.WaitForExit();
 
@@ -69,56 +76,123 @@ namespace The_BFME_API_by_MarcellVokk.Network
 
             if (service != null && service.Status == ServiceControllerStatus.Stopped)
             {
-                service.Start();
+                try
+                {
+                    service.Start();
+                }
+                catch
+                {
+
+                }
             }
 
+            Logger.LogDiagnostic("Starting ZeroTier service... DONE!", "NetworkClient");
+
             RegistryHelper.DisableNewNetworkPopup();
+
+            Logger.LogDiagnostic("Initialized!", "NetworkClient");
+        }
+
+        public async Task CleanUp()
+        {
+            Logger.LogDiagnostic("Cleaning up...", "NetworkClient");
+
+            ServiceController service = new ServiceController("ZeroTierOneService");
+
+            await Task.Run(() =>
+            {
+                if (service != null && service.Status == ServiceControllerStatus.Stopped)
+                {
+                    for (int i = 0; i < 10; i++)
+                    {
+                        try
+                        {
+                            service.Start();
+                            break;
+                        }
+                        catch
+                        {
+                            Thread.Sleep(50);
+                        }
+                    }
+                }
+
+                foreach (string room in GetAllCurrentRooms())
+                {
+                    Process.Start(new ProcessStartInfo("cmd", @$"/C ""{Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "ZeroTier", "One")}\zerotier-one_x64.exe"" -q leave {room}") { CreateNoWindow = true })?.WaitForExit();
+                }
+            });
+
+            Logger.LogDiagnostic("Cleaning up... DONE!", "NetworkClient");
         }
 
         public void Dispose()
         {
-            CurrentRoomId = "";
-
-            foreach (string room in GetAllCurrentRooms())
-            {
-                Process.Start(new ProcessStartInfo("cmd", @$"/C ""{Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "ZeroTier", "One")}\zerotier-one_x64.exe"" -q leave {room}") { CreateNoWindow = true })?.WaitForExit();
-            }
+            Logger.LogDiagnostic("Disposing...", "NetworkClient");
 
             ServiceController service = new ServiceController("ZeroTierOneService");
 
             if (service != null && service.Status == ServiceControllerStatus.Running)
             {
-                service.Stop();
+                try
+                {
+                    service.Stop();
+                }
+                catch
+                {
+
+                }
             }
+
+            Logger.LogDiagnostic("Disposing... DONE!", "NetworkClient");
         }
 
         public static void Remove()
         {
+            Logger.LogDiagnostic("Removing ZeroTier binaries...", "NetworkClient");
+
             Process.Start(new ProcessStartInfo("cmd", @$"/C ""{Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "ZeroTier", "One")}\zerotier-one_x64.exe"" -R") { CreateNoWindow = true })?.WaitForExit();
+
+            Logger.LogDiagnostic("Removing ZeroTier binaries... DONE!", "NetworkClient");
         }
 
         public async Task<string> JoinRoom(string roomId, Action cancellationAssertion = null)
         {
-            await LeaveRoom();
+            await LeaveRoom(true);
+
+            Logger.LogDiagnostic($"Joining room {roomId}...", "NetworkClient");
 
             CurrentRoomId = roomId;
 
             ServiceController service = new ServiceController("ZeroTierOneService");
             if (service != null && service.Status == ServiceControllerStatus.Stopped)
             {
-                service.Start();
+                try
+                {
+                    service.Start();
+                }
+                catch
+                {
+
+                }
             }
             RegistryHelper.DisableNewNetworkPopup();
 
             await Task.Run(() => Process.Start(new ProcessStartInfo("cmd", @$"/C ""{Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "ZeroTier", "One")}\zerotier-one_x64.exe"" -q join {roomId}") { CreateNoWindow = true })?.WaitForExit());
 
+            Logger.LogDiagnostic($"Waiting for room...", "NetworkClient");
+
             string ip = await GetLocalClientIp(cancellationAssertion);
+
+            Logger.LogDiagnostic($"Joining room {roomId}... DONE!", "NetworkClient");
 
             return ip;
         }
 
-        public async Task LeaveRoom()
+        public async Task LeaveRoom(bool waitIfWasConnected = false)
         {
+            Logger.LogDiagnostic($"Leaving room...", "NetworkClient");
+
             CurrentRoomId = "";
 
             await Task.Run(() =>
@@ -131,9 +205,18 @@ namespace The_BFME_API_by_MarcellVokk.Network
                     Process.Start(new ProcessStartInfo("cmd", @$"/C ""{Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "ZeroTier", "One")}\zerotier-one_x64.exe"" -q leave {room}") { CreateNoWindow = true })?.WaitForExit();
                 }
 
-                if (wasInAnyRoom)
+                if (wasInAnyRoom && waitIfWasConnected)
                 {
                     Thread.Sleep(6000);
+                }
+
+                if (wasInAnyRoom)
+                {
+                    Logger.LogDiagnostic($"Leaving room... DONE!", "NetworkClient");
+                }
+                else
+                {
+                    Logger.LogDiagnostic($"Nothing to leave, not currently in a room...", "NetworkClient");
                 }
             });
         }
@@ -171,7 +254,7 @@ namespace The_BFME_API_by_MarcellVokk.Network
 
                     timeout.Stop();
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     if (ex is TaskCanceledException)
                     {
@@ -202,9 +285,9 @@ namespace The_BFME_API_by_MarcellVokk.Network
             {
                 finalResult = JArray.Parse(result).Select(x => x["id"].ToString()).ToList();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                
+
             }
 
             return finalResult;

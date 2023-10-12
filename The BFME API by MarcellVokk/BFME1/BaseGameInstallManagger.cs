@@ -4,7 +4,7 @@ using System.IO;
 
 namespace The_BFME_API_by_MarcellVokk.BFME1
 {
-    public static class LauncherInstallManagger
+    public static class BaseGameInstallManagger
     {
         public static string GameDirectory
         {

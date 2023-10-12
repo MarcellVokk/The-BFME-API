@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
+using The_BFME_API_by_MarcellVokk.Logging;
 
 namespace The_BFME_API_by_MarcellVokk.BFME1
 {
@@ -71,24 +72,17 @@ namespace The_BFME_API_by_MarcellVokk.BFME1
                 Size curentResolution = ResolutionManager.GetResolutionFromSettings();
                 string resolutionId = $"{curentResolution.Width}x{curentResolution.Height}";
 
-                try
+                using (StreamReader sr = new StreamReader($@".\BFME1\bfme_api_resources\{resolutionId}\config.conf"))
                 {
-                    using (StreamReader sr = new StreamReader($@".\BFME1\bfme_api_resources\{resolutionId}\config.conf"))
-                    {
-                        string configRaw = sr.ReadToEnd();
+                    string configRaw = sr.ReadToEnd();
 
-                        foreach (string entry in configRaw.Split('\n'))
+                    foreach (string entry in configRaw.Split('\n'))
+                    {
+                        if (entry.Split(" = ").Length > 1 && !newConfig.ContainsKey(entry.Split(" = ")[0]))
                         {
-                            if (entry.Split(" = ").Length > 1 && !newConfig.ContainsKey(entry.Split(" = ")[0]))
-                            {
-                                newConfig.Add(entry.Split(" = ")[0], entry.Split(" = ")[1]);
-                            }
+                            newConfig.Add(entry.Split(" = ")[0], entry.Split(" = ")[1]);
                         }
                     }
-                }
-                catch
-                {
-
                 }
             }
 
@@ -101,41 +95,34 @@ namespace The_BFME_API_by_MarcellVokk.BFME1
 
             if (IsCurentGameResolutionSupported())
             {
-                try
+                using (StreamReader sr = new StreamReader($@".\BFME1\bfme_api_resources\map_spots.conf"))
                 {
-                    using (StreamReader sr = new StreamReader($@".\BFME1\bfme_api_resources\map_spots.conf"))
+                    string configRaw = sr.ReadToEnd();
+
+                    string curentMap = "";
+                    List<Point> curentMapSpots = new List<Point>();
+
+                    foreach (string entry in configRaw.Split('\n'))
                     {
-                        string configRaw = sr.ReadToEnd();
-
-                        string curentMap = "";
-                        List<Point> curentMapSpots = new List<Point>();
-
-                        foreach (string entry in configRaw.Split('\n'))
+                        if (entry.Contains("map"))
                         {
-                            if(entry.Contains("map"))
-                            {
-                                curentMap = entry.Replace("\r", "");
-                            }
-                            else if(entry.Split(' ').Length == 2)
-                            {
-                                curentMapSpots.Add(new Point(int.Parse(entry.Split(' ')[0]), int.Parse(entry.Split(' ')[1])));
-                            }
-                            else
-                            {
-                                newMapSpotConfig.Add(curentMap, curentMapSpots.ToArray());
-                                curentMapSpots.Clear();
-                            }
+                            curentMap = entry.Replace("\r", "");
                         }
-
-                        if(curentMapSpots.Count > 0)
+                        else if (entry.Split(' ').Length == 2)
                         {
-                            newMapSpotConfig.Add(curentMap.ToString(), curentMapSpots.ToArray());
+                            curentMapSpots.Add(new Point(int.Parse(entry.Split(' ')[0]), int.Parse(entry.Split(' ')[1])));
+                        }
+                        else
+                        {
+                            newMapSpotConfig.Add(curentMap, curentMapSpots.ToArray());
+                            curentMapSpots.Clear();
                         }
                     }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
+
+                    if (curentMapSpots.Count > 0)
+                    {
+                        newMapSpotConfig.Add(curentMap.ToString(), curentMapSpots.ToArray());
+                    }
                 }
             }
 

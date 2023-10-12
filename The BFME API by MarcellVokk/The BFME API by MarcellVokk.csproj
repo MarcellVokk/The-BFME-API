@@ -42,7 +42,7 @@
 
   <ItemGroup>
     <Reference Include="System.Windows.Forms">
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.Windows.Forms.dll</HintPath>
+      <HintPath>Dependencies\System.Windows.Forms.dll</HintPath>
     </Reference>
   </ItemGroup>
 
@@ -299,7 +299,70 @@
     <None Update="BFME1\bfme_api_resources\2560x1440\victorious_red.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="BFME1\bfme_api_resources\3440x1440\button_down.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="BFME1\bfme_api_resources\3440x1440\config.conf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="BFME1\bfme_api_resources\3440x1440\custom_game_lobby_title.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="BFME1\bfme_api_resources\3440x1440\game_started.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="BFME1\bfme_api_resources\3440x1440\join_failed_popup_title.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="BFME1\bfme_api_resources\3440x1440\menu_1_multiplayer_button.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="BFME1\bfme_api_resources\3440x1440\menu_2_network_button.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="BFME1\bfme_api_resources\3440x1440\start_failed_test_message.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="BFME1\bfme_api_resources\3440x1440\victorious.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="BFME1\bfme_api_resources\3440x1440\victorious_red.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="BFME1\bfme_api_resources\3840x2160\button_down.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="BFME1\bfme_api_resources\3840x2160\config.conf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="BFME1\bfme_api_resources\3840x2160\custom_game_lobby_title.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="BFME1\bfme_api_resources\3840x2160\game_started.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="BFME1\bfme_api_resources\3840x2160\join_failed_popup_title.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="BFME1\bfme_api_resources\3840x2160\menu_1_multiplayer_button.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="BFME1\bfme_api_resources\3840x2160\menu_2_network_button.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="BFME1\bfme_api_resources\3840x2160\start_failed_test_message.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="BFME1\bfme_api_resources\3840x2160\victorious.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="BFME1\bfme_api_resources\3840x2160\victorious_red.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="BFME1\bfme_api_resources\map_spots.conf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="BFME1\bfme_api_resources\map_spots_example.conf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

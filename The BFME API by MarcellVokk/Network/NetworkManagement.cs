@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using The_BFME_API_by_MarcellVokk.Logging;
 
 namespace The_BFME_API_by_MarcellVokk.Network
 {
@@ -19,6 +20,8 @@ namespace The_BFME_API_by_MarcellVokk.Network
 
         public static async Task<string> OpenRoom()
         {
+            Logger.LogDiagnostic("Opening room...", "NetworkManagement");
+
             string roomId = "";
 
             await Task.Run(() =>
@@ -54,12 +57,14 @@ namespace The_BFME_API_by_MarcellVokk.Network
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine("Failed to create room... Trying again in 2 seconds!");
+                        Logger.LogDiagnostic("Failed to open room... This can hapen, trying again in 2 seconds!", "NetworkManagement");
 
                         Thread.Sleep(2000);
                     }
                 }
             });
+
+            Logger.LogDiagnostic("Opening room... DONE!", "NetworkManagement");
 
             await ConfigureRoom(roomId);
 
@@ -68,6 +73,8 @@ namespace The_BFME_API_by_MarcellVokk.Network
 
         public static async Task ConfigureRoom(string roomId)
         {
+            Logger.LogDiagnostic("Configuring room...", "NetworkManagement");
+
             await Task.Run(() =>
             {
                 while (true)
@@ -166,16 +173,20 @@ namespace The_BFME_API_by_MarcellVokk.Network
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine("Failed to configure room... Trying again in 2 seconds!");
+                        Logger.LogDiagnostic("Failed to configure room... This can hapen, trying again in 2 seconds!", "NetworkManagement");
 
                         Thread.Sleep(2000);
                     }
                 }
             });
+
+            Logger.LogDiagnostic("Configuring room... DONE!", "NetworkManagement");
         }
 
         public static async Task CloseRoom(string roomId)
         {
+            Logger.LogDiagnostic("Closing room...", "NetworkManagement");
+
             await Task.Run(() =>
             {
                 while (true)
@@ -199,56 +210,14 @@ namespace The_BFME_API_by_MarcellVokk.Network
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine("Failed to close room... Trying again in 2 seconds!");
-
-                        Thread.Sleep(2000);
-                    }
-                }
-            });
-        }
-
-        public static async Task<List<string>> GetAllOpenRooms()
-        {
-            List<string> result = new List<string>();
-
-            await Task.Run(() =>
-            {
-                while (true)
-                {
-                    try
-                    {
-                        result.Clear();
-                        
-                        var url = "https://api.zerotier.com/api/v1/network";
-
-                        var httpRequest = (HttpWebRequest)WebRequest.Create(url);
-                        httpRequest.Method = "GET";
-
-                        httpRequest.Headers["Authorization"] = $"Bearer {API_KEY}";
-
-                        var httpResponse = (HttpWebResponse)httpRequest.GetResponse();
-                        using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
-                        {
-                            JArray response = JArray.Parse(streamReader.ReadToEnd());
-
-                            foreach (dynamic room in response)
-                            {
-                                result.Add((string)room.id);
-                            }
-                        }
-
-                        break;
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine("Failed to close room... Trying again in 2 seconds!");
+                        Logger.LogDiagnostic("Failed to close room... This can hapen, trying again in 2 seconds!", "NetworkManagement");
 
                         Thread.Sleep(2000);
                     }
                 }
             });
 
-            return result;
+            Logger.LogDiagnostic("Closing room... DONE!", "NetworkManagement");
         }
     }
 }

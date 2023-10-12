@@ -70,5 +70,10 @@ namespace The_BFME_API_by_MarcellVokk.BFME1
                 sw.Write(string.Join('\n', settings.Select(x => $"{x.Key} = {x.Value}")));
             }
         }
+
+        public static bool IsResolutionSupported(Size resolution)
+        {
+            return Directory.Exists($@".\BFME1\bfme_api_resources\{resolution.Width}x{resolution.Height}");
+        }
     }
 }

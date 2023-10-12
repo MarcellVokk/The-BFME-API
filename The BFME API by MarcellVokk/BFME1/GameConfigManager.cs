@@ -65,7 +65,7 @@ namespace The_BFME_API_by_MarcellVokk.BFME1
             return false;
         }
 
-        public static void SetStartupNetworkSetup(string mapId, int armyId, string username, int color)
+        public static void SetPlayerSettings(string mapId, int armyId, string username, int color)
         {
             if (armyId == 1)
             {
