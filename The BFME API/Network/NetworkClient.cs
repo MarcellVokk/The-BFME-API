@@ -16,7 +16,7 @@ namespace The_BFME_API_by_MarcellVokk.Network
         {
             if (!(new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator)))
             {
-                throw new AccessViolationException("EasyVLanClient needs administrator privelidges to work!");
+                throw new AccessViolationException("NetworkClient needs administrator privelidges to work!");
             }
 
             try
