@@ -43,7 +43,7 @@ namespace The_BFME_API.BFME1
             await SelectSpot();
         }
 
-        public async Task LaunchAsOffhost()
+        public async Task LaunchAsOffhost(Action? waitForHost = null)
         {
             IsHost = false;
 
@@ -52,6 +52,8 @@ namespace The_BFME_API.BFME1
             GameDataManager.SetPlayerSettings(MapId, Army, Username, PlayerColor);
 
             await LaunchGame();
+
+            if (waitForHost != null) await Task.Run(() => waitForHost.Invoke());
 
             await WaitForMenu1();
             await GoToMultiplayerMenu();

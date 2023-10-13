@@ -36,8 +36,12 @@ namespace GameExample
             {
                 await gameClient.LaunchAsHost();
 
-                // OR for offhost players. You'd wait for the host to complete the launch process before calling this
-                //await gameClient.LaunchAsOffhost();
+                //await gameClient.LaunchAsOffhost(() =>
+                //{
+                //    // Wait on the main menu until the host is ready...
+                //    bool isHostReady = true;
+                //    while (!isHostReady) { }
+                //});
 
                 Console.WriteLine($"Game launched and the player is in the ingame network lobby!");
 
