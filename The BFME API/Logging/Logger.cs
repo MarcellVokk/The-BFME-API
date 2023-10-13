@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace The_BFME_API_by_MarcellVokk.Logging
+namespace The_BFME_API.Logging
 {
     public static class Logger
     {

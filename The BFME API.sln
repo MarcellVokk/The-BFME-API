@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameExample", "GameExample\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetworkingExample", "NetworkingExample\NetworkingExample.csproj", "{2B3FE06F-BB6E-4C34-9F48-CF9862D01E96}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "The BFME API by MarcellVokk", "The BFME API\The BFME API by MarcellVokk.csproj", "{3084446C-9A98-4D7A-A5AE-5D1B510B1DDF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "The BFME API", "The BFME API\The BFME API.csproj", "{3084446C-9A98-4D7A-A5AE-5D1B510B1DDF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,4 +1,4 @@
-﻿using The_BFME_API_by_MarcellVokk.Network;
+﻿using The_BFME_API.Network;
 
 namespace NetworkingExample
 {
@@ -7,7 +7,7 @@ namespace NetworkingExample
         public static async Task Main(string[] args)
         {
             // Initialize the logger
-            The_BFME_API_by_MarcellVokk.Logging.Logger.OnDiagnostic += (s, e) => { Console.WriteLine(e); };
+            The_BFME_API.Logging.Logger.OnDiagnostic += (s, e) => { Console.WriteLine(e); };
 
             // This function demonstrates the networking portion of the API, and explains how to use it
             await NetworkDemo();

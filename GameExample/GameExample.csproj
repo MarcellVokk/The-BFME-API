@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\The BFME API\The BFME API by MarcellVokk.csproj" />
+    <ProjectReference Include="..\The BFME API\The BFME API.csproj" />
   </ItemGroup>
 
 </Project>

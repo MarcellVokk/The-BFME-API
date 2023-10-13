@@ -1,4 +1,4 @@
-using The_BFME_API_by_MarcellVokk.BFME1;
+using The_BFME_API.BFME1;
 
 namespace GameExample
 {
@@ -7,7 +7,7 @@ namespace GameExample
         public static async Task Main(string[] args)
         {
             // Initialize the logger
-            The_BFME_API_by_MarcellVokk.Logging.Logger.OnDiagnostic += (s, e) => { Console.WriteLine(e); };
+            The_BFME_API.Logging.Logger.OnDiagnostic += (s, e) => { Console.WriteLine(e); };
 
             // This function demonstrates the BFME1 client interface portion of the API, and explains how to use it
             await Bfme1ClientDemo();

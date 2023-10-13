@@ -4,9 +4,9 @@ using System.Net;
 using System.Reflection;
 using System.Security.Principal;
 using System.ServiceProcess;
-using The_BFME_API_by_MarcellVokk.Logging;
+using The_BFME_API.Logging;
 
-namespace The_BFME_API_by_MarcellVokk.Network
+namespace The_BFME_API.Network
 {
     public class NetworkClient
     {
@@ -16,7 +16,7 @@ namespace The_BFME_API_by_MarcellVokk.Network
         {
             if (!(new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator)))
             {
-                throw new AccessViolationException("EasyVLanClient needs administrator privelidges to work!");
+                throw new AccessViolationException("NetworkClient needs administrator privelidges to work!");
             }
 
             try

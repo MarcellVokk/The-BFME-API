@@ -3,7 +3,7 @@ using OpenCvSharp.Extensions;
 using System.Drawing;
 using System.Runtime.InteropServices;
 
-namespace The_BFME_API_by_MarcellVokk.BFME1
+namespace The_BFME_API.BFME1
 {
     internal static class ScreenReader
     {

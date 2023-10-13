@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace The_BFME_API_by_MarcellVokk.Network
+namespace The_BFME_API.Network
 {
     public static class RegistryHelper
     {

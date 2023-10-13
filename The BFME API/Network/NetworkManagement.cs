@@ -5,9 +5,9 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using The_BFME_API_by_MarcellVokk.Logging;
+using The_BFME_API.Logging;
 
-namespace The_BFME_API_by_MarcellVokk.Network
+namespace The_BFME_API.Network
 {
     public class NetworkManagement
     {

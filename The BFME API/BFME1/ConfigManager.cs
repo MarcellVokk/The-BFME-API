@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
-using The_BFME_API_by_MarcellVokk.Logging;
+using The_BFME_API.Logging;
 
-namespace The_BFME_API_by_MarcellVokk.BFME1
+namespace The_BFME_API.BFME1
 {
     internal static class ConfigManager
     {
