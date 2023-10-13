@@ -115,6 +115,7 @@ namespace The_BFME_API_by_MarcellVokk.Tools
                 {
                     m.Rectangle(new Rect(item.X, item.Y, item.Width, item.Height), new Scalar(255, 0, 0), 1);
                     m.PutText(index.ToString(), new OpenCvSharp.Point(item.X - 5, item.Y + 5), HersheyFonts.HersheySimplex, 1, new Scalar(255, 255, 255));
+                    m.Circle(new OpenCvSharp.Point(item.X + item.Width / 2, item.Y + item.Height / 2), 3, new Scalar(0, 255, 0), -1);
                     index++;
                 }
 
