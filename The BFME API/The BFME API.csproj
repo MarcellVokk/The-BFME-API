@@ -35,16 +35,4 @@
     <PackageReference Include="System.ServiceProcess.ServiceController" Version="7.0.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="BFME1\bfme_api_resources\buttons.conf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="BFME1\bfme_api_resources\map_spots.conf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="BFME1\bfme_api_resources\map_spots_example.conf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
 </Project>

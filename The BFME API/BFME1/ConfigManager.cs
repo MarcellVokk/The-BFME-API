@@ -5,78 +5,42 @@ namespace The_BFME_API.BFME1
 {
     internal static class ConfigManager
     {
-        private static Dictionary<string, Point> Buttons = new Dictionary<string, Point>();
-        private static Dictionary<string, Point[]> Spots = new Dictionary<string, Point[]>();
-
-        public static void Load()
+        private static Dictionary<string, Point> Buttons = new Dictionary<string, Point>
         {
-            Logger.LogDiagnostic("Loading config...", "ConfigManager");
+            { "ButtonMultiplayer", new Point(700, 1380) },
+            { "ButtonNetwork", new Point(1070, 1380) },
 
-            Buttons.Clear();
-            using (StreamReader sr = new StreamReader($@".\BFME1\bfme_api_resources\buttons.conf"))
-            {
-                string configRaw = sr.ReadToEnd();
+            { "ButtonCreateGame", new Point(1070, 1380) },
+            { "CurentGamesFirstItem", new Point(1280, 455) },
 
-                foreach (string entry in configRaw.Split('\n'))
-                {
-                    if (entry.Split(" = ").Length > 1 && !Buttons.ContainsKey(entry.Split(" = ")[0]))
-                    {
-                        Buttons.Add(entry.Split(" = ")[0], new Point(int.Parse(entry.Split(" = ")[1].Split(' ')[0]), int.Parse(entry.Split(" = ")[1].Split(' ')[1])));
-                    }
-                }
-            }
+            { "TeamButtonXAndSize", new Point(1090, 50) },
 
-            Spots.Clear();
-            using (StreamReader sr = new StreamReader($@".\BFME1\bfme_api_resources\map_spots.conf"))
-            {
-                string configRaw = sr.ReadToEnd();
+            { "ButtonStartGame", new Point(1070, 1380) },
 
-                string curentMap = "";
-                List<Point> curentMapSpots = new List<Point>();
+            { "MapTopLeft", new Point(1376, 316) },
+            { "MapSize", new Point(346, 260) },
+            { "NonHostMapSpotOffset", new Point(-21, 151) },
 
-                foreach (string entry in configRaw.Split('\n'))
-                {
-                    if (entry.Contains("map"))
-                    {
-                        curentMap = entry.Replace("\r", "");
-                    }
-                    else if (entry.Split(' ').Length == 2)
-                    {
-                        curentMapSpots.Add(new Point(int.Parse(entry.Split(' ')[0]), int.Parse(entry.Split(' ')[1])));
-                    }
-                    else
-                    {
-                        Spots.Add(curentMap, curentMapSpots.ToArray());
-                        curentMapSpots.Clear();
-                    }
-                }
-
-                if (curentMapSpots.Count > 0)
-                {
-                    Spots.Add(curentMap.ToString(), curentMapSpots.ToArray());
-                }
-            }
-
-            Logger.LogDiagnostic("Loading config... DONE!", "ConfigManager");
-        }
+            { "VictoryPixel1", new Point(1139, 719) },
+            { "VictoryPixel2", new Point(1150, 719) },
+            { "VictoryPixel3", new Point(1168, 719) },
+            { "VictoryPixel4", new Point(1177, 719) },
+            { "VictoryPixel5", new Point(1213, 719) },
+            { "VictoryPixel6", new Point(1231, 719) },
+            { "VictoryPixel7", new Point(1258, 719) },
+            { "VictoryPixel8", new Point(1268, 719) },
+            { "VictoryPixel9", new Point(1294, 719) },
+            { "VictoryPixel10", new Point(1305, 719) },
+            { "VictoryPixel11", new Point(1333, 719) },
+            { "VictoryPixel12", new Point(1342, 719) },
+            { "VictoryPixel13", new Point(1362, 719) },
+            { "VictoryPixel14", new Point(1378, 719) },
+        };
 
         public static Point GetPosFromConfig(string key, Point? offset = null)
         {
             Size curentResolution = GameDataManager.GetCurentResolution();
-            return new Point((int)(Buttons[key].X / 2560d * curentResolution.Width) + (offset != null ? offset.Value.X : 0), (int)(Buttons[key].Y / 1440d * curentResolution.Height) + (offset != null ? offset.Value.Y : 0));
-        }
-
-        public static Point GetMapSpotFromConfig(string mapId, int spotId)
-        {
-            Point ingameMapSize = GetPosFromConfig("MapSize");
-            Point ingameMapTopLeft = GetPosFromConfig("MapTopLeft");
-
-            double scaleFactor_x = ingameMapSize.X / 346d;
-            double scaleFactor_y = ingameMapSize.Y / 260d;
-
-            Point result = Spots[mapId.Replace("_20nm_", "_")][spotId - 1];
-
-            return new Point((int)(result.X * scaleFactor_x) + ingameMapTopLeft.X, (int)(result.Y * scaleFactor_y) + ingameMapTopLeft.Y);
+            return new Point((int)(Buttons[key].X / 2560d * curentResolution.Width) + (offset is not null ? offset.Value.X : 0), (int)(Buttons[key].Y / 1440d * curentResolution.Height) + (offset is not null ? offset.Value.Y : 0));
         }
     }
 }

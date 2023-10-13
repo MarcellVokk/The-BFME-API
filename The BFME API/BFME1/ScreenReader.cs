@@ -115,9 +115,9 @@ namespace The_BFME_API.BFME1
             {
                 for (var y = (int)(curentResolution.Height * 0.25d); y < bitMap.Size.Height; y++)
                 {
-                    var pixel = bitMap.GetPixel(ConfigManager.GetPosFromConfig("TeamButton1").X, y);
+                    var pixel = bitMap.GetPixel(ConfigManager.GetPosFromConfig("TeamButtonXAndSize").X, y);
 
-                    if (pixel.GetHue() > 16.5 && pixel.GetHue() < 22 && pixel.GetBrightness() * 100 < 40 && pixel.GetBrightness() * 100 > 25)
+                    if (pixel.GetHue() > 16.5 && pixel.GetHue() < 22 && pixel.GetBrightness() * 100 > 25 && pixel.GetBrightness() * 100 < 40)
                     {
                         return y;
                     }
@@ -127,13 +127,164 @@ namespace The_BFME_API.BFME1
             return 0;
         }
 
+        public static int GetArmyDropdownHeight()
+        {
+            System.Drawing.Size curentResolution = GameDataManager.GetCurentResolution();
+
+            using (Bitmap bitMap = GrabScreen().ToBitmap())
+            {
+                int height = -1;
+
+                for (var y = GetPlayerYLocationOnScreen(); y < bitMap.Size.Height; y++)
+                {
+                    var pixel = bitMap.GetPixel(ConfigManager.GetPosFromConfig("TeamButtonXAndSize").X, y);
+
+                    if (pixel.R == 122 && pixel.G == 48 && pixel.B == 1)
+                    {
+                        if (height != -1)
+                        {
+                            return height;
+                        }
+                        else
+                        {
+                            height = 0;
+                        }
+                    }
+                    else if(height != -1)
+                    {
+                        height++;
+                    }
+                }
+            }
+
+            return 0;
+        }
+
+        public static List<Rectangle> GetMapSpots(System.Drawing.Point mapOffset)
+        {
+            List<Rectangle> spots = new List<Rectangle>();
+
+            System.Drawing.Point ingameMapSize = ConfigManager.GetPosFromConfig("MapSize");
+            System.Drawing.Point ingameMapTopLeft = ConfigManager.GetPosFromConfig("MapTopLeft");
+
+            ingameMapTopLeft.Offset(mapOffset);
+
+            System.Drawing.Size curentResolution = GameDataManager.GetCurentResolution();
+
+            using (Bitmap bitMap = GrabScreen().ToBitmap())
+            {
+                for (int i = 0; i < 8; i++)
+                {
+                    int minx = -1;
+                    int maxx = -1;
+                    int miny = -1;
+                    int maxy = -1;
+
+                    for (var y = ingameMapTopLeft.Y; y < ingameMapTopLeft.Y + ingameMapSize.Y; y++)
+                    {
+                        bool anySpotPixelInLine = false;
+
+                        for (var x = ingameMapTopLeft.X; x < ingameMapTopLeft.X + ingameMapSize.X; x++)
+                        {
+                            if (isSpotPixel(x, y, bitMap))
+                            {
+                                if (miny == -1)
+                                {
+                                    miny = y;
+
+                                    minx = x;
+                                    maxx = x;
+                                }
+
+                                if(x < minx)
+                                {
+                                    if(minx - x > 10)
+                                    {
+                                        miny = y;
+                                        maxx = x;
+                                    }
+
+                                    minx = x;
+                                }
+
+                                if(x > maxx)
+                                {
+                                    if(x - maxx > 10)
+                                    {
+                                        break;
+                                    }
+
+                                    maxx = x;
+                                }
+
+                                anySpotPixelInLine = true;
+                                break;
+                            }
+                        }
+
+                        if (miny != -1 && !anySpotPixelInLine)
+                        {
+                            maxy = y;
+                            break;
+                        }
+                    }
+
+                    if (minx != -1)
+                    {
+                        for (var x = minx; x < ingameMapTopLeft.X + ingameMapSize.X; x++)
+                        {
+                            bool anySpotPixelInLine = false;
+
+                            for (var y = miny; y < maxy; y++)
+                            {
+                                if (isSpotPixel(x, y, bitMap))
+                                {
+                                    if (minx == -1)
+                                    {
+                                        minx = x;
+                                    }
+
+                                    anySpotPixelInLine = true;
+                                }
+                            }
+
+                            if (minx != -1 && !anySpotPixelInLine)
+                            {
+                                maxx = x;
+                                break;
+                            }
+                        }
+
+                        spots.Add(new Rectangle(minx, miny, maxx - minx, maxy - miny));
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+
+            return spots;
+
+            bool isSpotPixel(int x, int y, Bitmap bitMap)
+            {
+                if(spots.Any(e => e.Contains(x, y)))
+                {
+                    return false;
+                }
+
+                var pixel = bitMap.GetPixel(x, y);
+                return pixel.GetHue() > 40 && pixel.GetHue() < 47 && pixel.GetSaturation() * 100 > 90 && pixel.GetBrightness() * 100 > 10;
+            }
+        }
+
         public static bool IsVictoriousTitleVisible()
         {
             using (Bitmap bitMap = GrabScreen().ToBitmap())
             {
                 int mistakes = 0;
 
-                for(int i = 1; i < 13; i++)
+                for(int i = 1; i < 14; i++)
                 {
                     var pixelPosition = ConfigManager.GetPosFromConfig($"VictoryPixel{i}");
                     var pixel = bitMap.GetPixel(pixelPosition.X, pixelPosition.Y);

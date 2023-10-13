@@ -24,11 +24,11 @@ namespace GameExample
             Bfme1Client gameClient = new Bfme1Client();
             gameClient.CancelationAssertion = CancellationAssertion;
             gameClient.Username = "Hello world";
-            gameClient.PlayerColor = 8;
-            gameClient.MapId = "maps_5Cmap_20mp_20carnen_5Cmap_20mp_20carnen_2Emap";
-            gameClient.Army = 2;
-            gameClient.Team = 2;
-            gameClient.Spot = 2;
+            gameClient.PlayerColor = PlayerColor.Purple;
+            gameClient.MapId = "maps_5Cmap_20mp_20dagorlad_5Cmap_20mp_20dagorlad_2Emap";
+            gameClient.Army = PlayerArmy.Mordor;
+            gameClient.Team = PlayerTeam.Team4;
+            gameClient.Spot = 0;
 
             Console.WriteLine($"Launching game...");
 

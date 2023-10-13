@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetworkingExample", "Networ
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "The BFME API", "The BFME API\The BFME API.csproj", "{3084446C-9A98-4D7A-A5AE-5D1B510B1DDF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolsExample", "ToolsExample\ToolsExample.csproj", "{786E1091-7697-43F1-B0E7-88B495BBB089}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{3084446C-9A98-4D7A-A5AE-5D1B510B1DDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3084446C-9A98-4D7A-A5AE-5D1B510B1DDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3084446C-9A98-4D7A-A5AE-5D1B510B1DDF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{786E1091-7697-43F1-B0E7-88B495BBB089}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{786E1091-7697-43F1-B0E7-88B495BBB089}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{786E1091-7697-43F1-B0E7-88B495BBB089}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{786E1091-7697-43F1-B0E7-88B495BBB089}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

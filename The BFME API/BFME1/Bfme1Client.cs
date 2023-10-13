@@ -13,19 +13,17 @@ namespace The_BFME_API.BFME1
         public string GameExecutableName = "lotrbfme.exe";
 
         public string Username = "";
-        public int PlayerColor = 1;
+        public PlayerColor PlayerColor = PlayerColor.Blue;
         public string MapId = "";
-        public int Team = 1;
+        public PlayerArmy Army = PlayerArmy.Random;
+        public PlayerTeam Team = PlayerTeam.Team1;
         public int Spot = 1;
-        public int Army = 1;
 
         public async Task LaunchAsHost()
         {
             IsHost = true;
 
-            ConfigManager.Load();
-
-            GameDataManager.SetPlayerSettings(MapId, Army, Username, PlayerColor);
+            GameDataManager.SetPlayerSettings(MapId, (int)Army, Username, (int)PlayerColor);
 
             await LaunchGame();
 
@@ -47,9 +45,7 @@ namespace The_BFME_API.BFME1
         {
             IsHost = false;
 
-            ConfigManager.Load();
-
-            GameDataManager.SetPlayerSettings(MapId, Army, Username, PlayerColor);
+            GameDataManager.SetPlayerSettings(MapId, (int)Army, Username, (int)PlayerColor);
 
             await LaunchGame();
 
@@ -322,30 +318,41 @@ namespace The_BFME_API.BFME1
             await Task.Run(() =>
             {
                 int playerYLocationOnScreen = ScreenReader.GetPlayerYLocationOnScreen();
+                int armyDropdownHeight = 0;
 
                 for (int i = 0; i <= 5; i++)
                 {
+                    var teamButtonXPosAndHeight = ConfigManager.GetPosFromConfig("TeamButtonXAndSize");
+
                     InputHelper.Click(new Point(0, 0), 20);
 
                     Thread.Sleep(50);
 
-                    InputHelper.Click(new Point(ConfigManager.GetPosFromConfig("TeamButton1").X, playerYLocationOnScreen + 15), 20);
+                    InputHelper.Click(new Point(teamButtonXPosAndHeight.X, playerYLocationOnScreen + 15), 20);
 
                     Thread.Sleep(50);
 
+                    if(i == 0)
+                    {
+                        Thread.Sleep(100);
+
+                        armyDropdownHeight = ScreenReader.GetArmyDropdownHeight();
+                        Console.WriteLine(armyDropdownHeight);
+                    }
+
                     switch (Team)
                     {
-                        case 1:
-                            InputHelper.Click(ConfigManager.GetPosFromConfig("TeamButton1", new Point(0, playerYLocationOnScreen)), 20);
+                        case PlayerTeam.Team1:
+                            InputHelper.Click(new Point(teamButtonXPosAndHeight.X, playerYLocationOnScreen + teamButtonXPosAndHeight.Y + (int)(armyDropdownHeight / 5d * 1.5d)), 20);
                             break;
-                        case 2:
-                            InputHelper.Click(ConfigManager.GetPosFromConfig("TeamButton2", new Point(0, playerYLocationOnScreen)), 20);
+                        case PlayerTeam.Team2:
+                            InputHelper.Click(new Point(teamButtonXPosAndHeight.X, playerYLocationOnScreen + teamButtonXPosAndHeight.Y + (int)(armyDropdownHeight / 5d * 2.5d)), 20);
                             break;
-                        case 3:
-                            InputHelper.Click(ConfigManager.GetPosFromConfig("TeamButton3", new Point(0, playerYLocationOnScreen)), 20);
+                        case PlayerTeam.Team3:
+                            InputHelper.Click(new Point(teamButtonXPosAndHeight.X, playerYLocationOnScreen + teamButtonXPosAndHeight.Y + (int)(armyDropdownHeight / 5d * 3.5d)), 20);
                             break;
-                        case 4:
-                            InputHelper.Click(ConfigManager.GetPosFromConfig("TeamButton4", new Point(0, playerYLocationOnScreen)), 20);
+                        case PlayerTeam.Team4:
+                            InputHelper.Click(new Point(teamButtonXPosAndHeight.X, playerYLocationOnScreen + teamButtonXPosAndHeight.Y + (int)(armyDropdownHeight / 5d * 4.5d)), 20);
                             break;
                     }
 
@@ -362,12 +369,9 @@ namespace The_BFME_API.BFME1
 
             await Task.Run(() =>
             {
-                Point c = ConfigManager.GetMapSpotFromConfig(MapId, Spot);
+                List<Rectangle> spots = ScreenReader.GetMapSpots(IsHost ? Point.Empty : ConfigManager.GetPosFromConfig("NonHostMapSpotOffset"));
 
-                if (!IsHost)
-                {
-                    c = new Point(c.X + ConfigManager.GetPosFromConfig("NonHostMapSpotOffset").X, c.Y + ConfigManager.GetPosFromConfig("NonHostMapSpotOffset").Y);
-                }
+                Point c = new Point(spots[Spot].X + spots[Spot].Width / 2, spots[Spot].Y + spots[Spot].Height / 2);
 
                 InputHelper.Click(c);
             });
@@ -462,5 +466,39 @@ namespace The_BFME_API.BFME1
 
         [DllImport("user32.dll", SetLastError = true)]
         static extern UInt32 GetWindowLong(IntPtr hWnd, int nIndex);
+    }
+
+    public enum PlayerColor
+    {
+        Green = 0,
+        Red = 1,
+        Pink = 2,
+        Blue = 3,
+        LightBlue = 4,
+        Lime = 5,
+        Turquoise = 6,
+        Orange = 7,
+        Yellow = 8,
+        Purple = 9,
+        LightPink = 10,
+        Gray = 11,
+        White = 12
+    }
+
+    public enum PlayerArmy
+    {
+        Random = 1,
+        Rohan = 2,
+        Gondor = 3,
+        Isengard = 4,
+        Mordor = 5
+    }
+
+    public enum PlayerTeam
+    {
+        Team1 = 1,
+        Team2 = 2,
+        Team3 = 3,
+        Team4 = 4,
     }
 }
