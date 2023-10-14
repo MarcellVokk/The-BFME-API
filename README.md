@@ -1,6 +1,9 @@
 # The-BFME-API
 This Library allows you to launch and interact with BFME games as well as create virual LAN network rooms to play together even when you and other players are not on the same network.
 
+## Install
+The best way is probably to add it via NuGet: https://www.nuget.org/packages/The_BFME_API/1.0.0
+
 ## Supported games
 - BFME1
 
