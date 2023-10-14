@@ -21,14 +21,16 @@ namespace GameExample
             // This is just a demonstration, for the actual networking to work, you'd use the networking portion of the API
             // To create a room and put all the participating players in the same network before you start launching the game.
 
-            Bfme1Client gameClient = new Bfme1Client();
-            gameClient.CancelationAssertion = CancellationAssertion;
-            gameClient.Username = "Hello world";
-            gameClient.PlayerColor = PlayerColor.Purple;
-            gameClient.MapId = "maps_5Cmap_20mp_20dagorlad_5Cmap_20mp_20dagorlad_2Emap";
-            gameClient.Army = PlayerArmy.Mordor;
-            gameClient.Team = PlayerTeam.Team4;
-            gameClient.Spot = 0;
+            Bfme1Client gameClient = new Bfme1Client
+            {
+                CancelationAssertion = CancellationAssertion,
+                Username = "Hello world",
+                PlayerColor = PlayerColor.Purple,
+                MapId = "maps_5Cmap_20mp_20dagorlad_5Cmap_20mp_20dagorlad_2Emap",
+                Army = PlayerArmy.Mordor,
+                Team = PlayerTeam.Team4,
+                Spot = 0
+            };
 
             Console.WriteLine($"Launching game...");
 

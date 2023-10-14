@@ -9,6 +9,8 @@
     <Title>The_BFME_API_by_MarcellVokk</Title>
     <PackageId>The_BFME_API_by_MarcellVokk</PackageId>
     <RepositoryUrl>https://github.com/MarcellVokk/The-BFME-API</RepositoryUrl>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -25,6 +27,17 @@
     <EmbeddedResource Include="Network\RuntimeResources\tap-windows\x64\zttap300.sys" />
     <EmbeddedResource Include="Network\RuntimeResources\zerotier-one.port" />
     <EmbeddedResource Include="Network\RuntimeResources\zerotier-one_x64.exe" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE.txt">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
