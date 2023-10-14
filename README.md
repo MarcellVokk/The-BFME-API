@@ -19,6 +19,7 @@ This Library allows you to launch and interact with BFME games as well as create
 
 ## Spot detection
 With some pretty clever code, this library is able to automaticaly detect spots from any map, and assign an index to them.
+
 ![Spot detection example image.](spots_5.png)
 
 There is also a ```MapSpotPreviewTool``` tool that allows you to render this image from any map image provided. This is extremely useful for mapmakers who want to make sure they put players on the same team in the correct spots.
