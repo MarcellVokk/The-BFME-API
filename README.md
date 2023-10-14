@@ -25,7 +25,7 @@ With some pretty clever code, this library is able to automaticaly detect spots 
 There is also a ```MapSpotPreviewTool``` tool that allows you to render this image from any map image provided. This is extremely useful for mapmakers who want to make sure they put players on the same team in the correct spots.
 
 ## Examples
-There is a ```NetworkExample``` and a ```GameExample``` in this repository, those can provide a good understanding about how to use the library, but here are some basic examples...
+There is a ```NetworkExample``` and a ```GameExample``` in this repository, those can provide a good understanding on how to use the library, but here are some basic examples...
 #### Game client
 ```csharp
 // Create a game client and assign the player parameters to it
