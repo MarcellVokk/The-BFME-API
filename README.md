@@ -1,6 +1,9 @@
 # The-BFME-API
 This Library allows you to launch and interact with BFME games as well as create virual LAN network rooms to play together even when you and other players are not on the same network.
 
+## Supported games
+- BFME1
+
 ## Features
 - Create virtual LAN networks so you and your opponents can play while on completely different networks
 - Launch BFME as host or offhost and automaticaly:
