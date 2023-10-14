@@ -175,100 +175,82 @@ namespace The_BFME_API.BFME1
             {
                 for (int i = 0; i < 8; i++)
                 {
-                    int minx = -1;
-                    int maxx = -1;
-                    int miny = -1;
-                    int maxy = -1;
+                    System.Drawing.Point spotFirstPixelPos = System.Drawing.Point.Empty;
 
-                    for (var y = ingameMapTopLeft.Y; y < ingameMapTopLeft.Y + ingameMapSize.Y; y++)
+                    int minY = 0;
+                    int maxY = 0;
+
+                    int minX = 0;
+                    int maxX = 0;
+
+                    int padding = 0;
+
+                    bool foundSpot = false;
+                    for (var y = 0; y < bitMap.Height; y++)
                     {
-                        bool anySpotPixelInLine = false;
-
-                        for (var x = ingameMapTopLeft.X; x < ingameMapTopLeft.X + ingameMapSize.X; x++)
+                        for (var x = 0; x < bitMap.Width; x++)
                         {
                             if (isSpotPixel(x, y, bitMap))
                             {
-                                if (miny == -1)
-                                {
-                                    miny = y;
-
-                                    minx = x;
-                                    maxx = x;
-                                }
-
-                                if(x < minx)
-                                {
-                                    if(minx - x > 10)
-                                    {
-                                        miny = y;
-                                        maxx = x;
-                                    }
-
-                                    minx = x;
-                                }
-
-                                if(x > maxx)
-                                {
-                                    if(x - maxx > 10)
-                                    {
-                                        break;
-                                    }
-
-                                    maxx = x;
-                                }
-
-                                anySpotPixelInLine = true;
+                                spotFirstPixelPos = new System.Drawing.Point(x, y);
+                                foundSpot = true;
                                 break;
                             }
                         }
+                        if (foundSpot) break;
+                    }
 
-                        if (miny != -1 && !anySpotPixelInLine)
+                    if (!foundSpot) break;
+
+                    for (var y = spotFirstPixelPos.Y; y < bitMap.Height; y++)
+                    {
+                        if (!isSpotPixel(spotFirstPixelPos.X, y, bitMap, true))
                         {
-                            maxy = y;
+                            minY = y;
                             break;
                         }
                     }
 
-                    if (minx != -1)
+                    for (var y = minY; y < bitMap.Height; y++)
                     {
-                        for (var x = minx; x < ingameMapTopLeft.X + ingameMapSize.X; x++)
+                        if (isSpotPixel(spotFirstPixelPos.X, y, bitMap, true))
                         {
-                            bool anySpotPixelInLine = false;
-
-                            for (var y = miny; y < maxy; y++)
-                            {
-                                if (isSpotPixel(x, y, bitMap))
-                                {
-                                    if (minx == -1)
-                                    {
-                                        minx = x;
-                                    }
-
-                                    anySpotPixelInLine = true;
-                                }
-                            }
-
-                            if (minx != -1 && !anySpotPixelInLine)
-                            {
-                                maxx = x;
-                                break;
-                            }
+                            maxY = y;
+                            break;
                         }
+                    }
 
-                        spots.Add(new Rectangle(minx, miny, maxx - minx, maxy - miny));
-                    }
-                    else
+                    for (var x = spotFirstPixelPos.X; x > 0; x--)
                     {
-                        break;
+                        if (isSpotPixel(x, minY + (maxY - minY) / 2, bitMap, true))
+                        {
+                            minX = x;
+                            break;
+                        }
                     }
+
+                    for (var x = spotFirstPixelPos.X; x < bitMap.Width; x++)
+                    {
+                        if (isSpotPixel(x, minY + (maxY - minY) / 2, bitMap, true))
+                        {
+                            maxX = x;
+                            break;
+                        }
+                    }
+
+                    padding = minY - spotFirstPixelPos.Y + 2;
+
+                    var spot = new Rectangle(minX, minY, maxX - minX, maxY - minY);
+
+                    spots.Add(new Rectangle(spot.X - padding - 1, spot.Y - padding, spot.Width + 2 * padding + 4, spot.Height + 2 * padding + 2));
                 }
             }
 
             return spots;
 
-            bool isSpotPixel(int x, int y, Bitmap bitMap)
+            bool isSpotPixel(int x, int y, Bitmap bitMap, bool allowKnownSpots = false)
             {
-                if(spots.Any(e => e.Contains(x, y)))
+                if (!allowKnownSpots && spots.Any(e => e.Contains(x, y)))
                 {
                     return false;
                 }

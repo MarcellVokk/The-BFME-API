@@ -20,6 +20,7 @@ namespace The_BFME_API.BFME1
             { "MapTopLeft", new Point(1376, 316) },
             { "MapSize", new Point(346, 260) },
             { "NonHostMapSpotOffset", new Point(-21, 151) },
+            { "MapSpotSize", new Point(50, 40) },
 
             { "VictoryPixel1", new Point(1139, 719) },
             { "VictoryPixel2", new Point(1150, 719) },
