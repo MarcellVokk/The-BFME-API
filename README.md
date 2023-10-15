@@ -41,7 +41,7 @@ Bfme1Client gameClient = new Bfme1Client
     MapId = "maps_5Cmap_20mp_20dagorlad_5Cmap_20mp_20dagorlad_2Emap",
     Army = PlayerArmy.Mordor,
     Team = PlayerTeam.Team4,
-    Spot = 0
+    SpotIndex = 0
 };
 
 // Launch as host
