@@ -17,7 +17,8 @@ The best way is probably to add it via NuGet: https://www.nuget.org/packages/The
   - Set player color
   - Select player army
   - Select player team
-  - Select hero and set game rules (BFME2 and RotWK)
+  - Select player hero (BFME2 and RotWK)
+  - Set game rules (BFME2 and RotWK)
   - Select spot on map
   - Select map
   - Start the match
