@@ -20,18 +20,18 @@ The best way is probably to add it via NuGet: https://www.nuget.org/packages/The
   - Select spot on map
   - Select map
   - Start the match
-  - Detect who won the match
+  - Detect who won the match (this is work in progress)
 
 ## Spot detection
 With some pretty clever code, this library is able to automaticaly detect spots from any map, and assign an index to them.
 
-![Spot detection example image.](spots_5.png)
+![Spot detection example image.](spot_preview.png)
 
-There is also a ```MapSpotPreviewTool``` tool that allows you to render this image from any map image provided. This is extremely useful for mapmakers who want to make sure they put players on the same team in the correct spots.
+There is also a ```MapSpotTool``` tool that allows you to render this image from any map image provided. This is extremely useful for mapmakers who want to make sure they put players on the same team in the correct spots.
 
 ## Examples
-There is a ```NetworkExample``` and a ```GameExample``` in this repository, those can provide a good understanding on how to use the library, but here are some basic examples...
-#### Game client
+There is a ```NetworkExample``` and a ```GameExample``` for each supported game in this repository, those can provide a good understanding on how to use the library, but here are some basic examples...
+#### Game client (BFME1)
 ```csharp
 // Create a game client and assign the player parameters to it
 Bfme1Client gameClient = new Bfme1Client
@@ -54,8 +54,36 @@ await gameClient.LaunchAsOffhost();
 // If you are the host, start the game
 gameClient.StartGame();
 
-// Wait here until the win screen apears
-await gameClient.WaitForWinScreen();
+// And finaly close the game
+await gameClient.CloseGame();
+```
+
+#### Game client (BFME2 and RotWK)
+```csharp
+// Create a game client and assign the player parameters to it
+Bfme2Client gameClient = new Bfme2Client
+{
+    CancelationAssertion = CancellationAssertion,
+    Username = "Hello world",
+    PlayerColor = PlayerColor.Green,
+    MapId = "maps_5Cmap_20wor_20mordor_5Cmap_20wor_20mordor_2Emap",
+    Army = PlayerArmy.Elves,
+    Hero = PlayerHero.None,
+    Team = PlayerTeam.Team2,
+    SpotIndex = 0
+};
+
+// Launch as host
+await gameClient.LaunchAsHost();
+
+// Optionaly, you can also provide gamerules
+await gameClient.LaunchAsHost(initialResources: 1000, commandPointFactor: 100, allowCustomHeroes: false, allowRingHeroes: false);
+
+// Launch as offhost
+await gameClient.LaunchAsOffhost();
+
+// If you are the host, start the game
+gameClient.StartGame();
 
 // And finaly close the game
 await gameClient.CloseGame();
@@ -90,3 +118,4 @@ client.Dispose();
   - Select the desired map
   - Click cancel
   - Open ```%appdata%/My Battle for Middle-earth Files/Network.ini``` and the Id of the map is the value for ```Map```
+  - (This only works in BFME1, getting the map Ids in BFME2 is a little bit more complicated... I'll post a list of all default maps sometime in the future...)
