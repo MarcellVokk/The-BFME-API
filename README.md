@@ -36,7 +36,6 @@ There is a ```NetworkExample``` and a ```GameExample``` for each supported game 
 // Create a game client and assign the player parameters to it
 Bfme1Client gameClient = new Bfme1Client
 {
-    CancelationAssertion = CancellationAssertion,
     Username = "Hello world",
     PlayerColor = PlayerColor.Purple,
     MapId = "maps_5Cmap_20mp_20dagorlad_5Cmap_20mp_20dagorlad_2Emap",
@@ -63,7 +62,6 @@ await gameClient.CloseGame();
 // Create a game client and assign the player parameters to it
 Bfme2Client gameClient = new Bfme2Client
 {
-    CancelationAssertion = CancellationAssertion,
     Username = "Hello world",
     PlayerColor = PlayerColor.Green,
     MapId = "maps_5Cmap_20wor_20mordor_5Cmap_20wor_20mordor_2Emap",
