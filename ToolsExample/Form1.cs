@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using The_BFME_API_by_MarcellVokk.Tools;
 
 namespace ToolsExample
@@ -18,7 +19,11 @@ namespace ToolsExample
 
                 if (ofd.ShowDialog() == DialogResult.OK)
                 {
+                    Stopwatch sw = Stopwatch.StartNew();
                     pictureBox1.Image = MapSpotPreviewTool.DrawMapSpotsPreview(new Bitmap(ofd.FileName));
+                    sw.Stop();
+
+                    label1.Text = $"Generating spot indexes took {sw.Elapsed.TotalMilliseconds}ms";
                 }
             }
         }

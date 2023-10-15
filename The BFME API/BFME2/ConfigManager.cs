@@ -1,24 +1,25 @@
 ﻿using System.Drawing;
 using The_BFME_API.Logging;
 
-namespace The_BFME_API.BFME1
+namespace The_BFME_API.BFME2
 {
     internal static class ConfigManager
     {
         private static Dictionary<string, Point> Buttons = new Dictionary<string, Point>
         {
-            { "ButtonMultiplayer", new Point(700, 1380) },
-            { "ButtonNetwork", new Point(1070, 1380) },
+            { "ButtonMultiplayer", new Point(1155, 1330) },
+            { "ButtonNetwork", new Point(1155, 1125) },
+            { "ButtonOpenPlay", new Point(1135, 1355) },
 
-            { "ButtonCreateGame", new Point(1070, 1380) },
+            { "ButtonCreateGame", new Point(2140, 660) },
             { "CurentGamesFirstItem", new Point(1280, 455) },
 
-            { "TeamButtonXAndSize", new Point(1086, 50) },
+            { "TeamButtonXAndSize", new Point(1828, 38) },
 
-            { "ButtonStartGame", new Point(1070, 1380) },
+            { "ButtonStartGame", new Point(2325, 1365) },
 
-            { "MapTopLeft", new Point(1376, 316) },
-            { "MapSize", new Point(346, 260) },
+            { "MapTopLeft", new Point(1100, 395) },
+            { "MapSize", new Point(360, 270) },
             { "NonHostMapSpotOffset", new Point(-21, 151) },
             { "MapSpotSize", new Point(50, 40) },
 

@@ -109,12 +109,9 @@ namespace The_BFME_API_by_MarcellVokk.Tools
 
             bool isSpotPixel(int x, int y, Bitmap bitMap, bool allowKnownSpots = false)
             {
-                if (!allowKnownSpots)
+                if (!allowKnownSpots && spots.Any(e => e.Contains(x, y)))
                 {
-                    if (spots.Any(e => e.Contains(x, y)))
-                    {
-                        return false;
-                    }
+                    return false;
                 }
 
                 var pixel = bitMap.GetPixel(x, y);

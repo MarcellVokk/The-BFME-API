@@ -4,33 +4,32 @@ using System.Runtime.InteropServices;
 using System.Text;
 using The_BFME_API.Logging;
 
-namespace The_BFME_API.BFME1
+namespace The_BFME_API.BFME2
 {
-    public class Bfme1Client
+    public class Bfme2Client
     {
         public bool IsHost { get; private set; } = false;
         public Action? CancelationAssertion;
-        public string GameExecutableName = "lotrbfme.exe";
+        public string GameExecutableName = "lotrbfme2.exe";
 
         public string Username = "";
         public PlayerColor PlayerColor = PlayerColor.Random;
         public string MapId = "";
         public PlayerArmy Army = PlayerArmy.Random;
+        public PlayerHero Hero = PlayerHero.None;
         public PlayerTeam Team = PlayerTeam.Team1;
         public int SpotIndex = 1;
 
-        public async Task LaunchAsHost()
+        public async Task LaunchAsHost(int initialResources = 1000, int commandPointFactor = 100, bool allowCustomHeroes = false, bool allowRingHeroes = false)
         {
             IsHost = true;
 
-            GameDataManager.SetPlayerSettings(MapId, (int)Army, Username, (int)PlayerColor);
+            GameDataManager.SetLaunchSettings(MapId, (int)Army, (int)Hero, Username, (int)PlayerColor, commandPointFactor, initialResources, allowCustomHeroes, allowRingHeroes);
 
             await LaunchGame();
 
             await WaitForMenu1();
             await GoToMultiplayerMenu();
-
-            await WaitForMenu2();
             await GoToNetworkMenu();
 
             await WaitForNetworkMenu();
@@ -45,7 +44,7 @@ namespace The_BFME_API.BFME1
         {
             IsHost = false;
 
-            GameDataManager.SetPlayerSettings(MapId, (int)Army, Username, (int)PlayerColor);
+            GameDataManager.SetLaunchSettings(MapId, (int)Army, (int)Hero, Username, (int)PlayerColor, 0, 0, true, true);
 
             await LaunchGame();
 
@@ -53,8 +52,6 @@ namespace The_BFME_API.BFME1
 
             await WaitForMenu1();
             await GoToMultiplayerMenu();
-
-            await WaitForMenu2();
             await GoToNetworkMenu();
 
             await WaitForNetworkMenu();
@@ -98,28 +95,6 @@ namespace The_BFME_API.BFME1
                 }
             });
 
-        }
-
-        public async Task WaitForWinScreen()
-        {
-            Logger.LogDiagnostic("Waiting for Victory screen...", "Bfme1Client");
-
-            await Task.Run(() =>
-            {
-                while (true)
-                {
-                    CancelationAssertion?.Invoke();
-
-                    if (ScreenReader.IsVictoriousTitleVisible())
-                    {
-                        break;
-                    }
-
-                    Thread.Sleep(800);
-                }
-            });
-
-            Logger.LogDiagnostic("Waiting for Victory screen... DONE!", "Bfme1Client");
         }
 
         public async Task CloseGame()
@@ -179,30 +154,6 @@ namespace The_BFME_API.BFME1
             Logger.LogDiagnostic("Waiting for Menu1... DONE!", "Bfme1Client");
         }
 
-        private async Task WaitForMenu2()
-        {
-            Logger.LogDiagnostic("Waiting for Menu2...", "Bfme1Client");
-
-            await Task.Run(() =>
-            {
-                while (true)
-                {
-                    CancelationAssertion?.Invoke();
-
-                    if (ScreenReader.IsMenu2Visible())
-                    {
-                        return;
-                    }
-
-                    Thread.Sleep(200);
-                }
-            });
-
-            await Task.Run(() => Thread.Sleep(1100));
-
-            Logger.LogDiagnostic("Waiting for Menu2... DONE!", "Bfme1Client");
-        }
-
         private async Task WaitForNetworkMenu()
         {
             Logger.LogDiagnostic("Waiting for NetworkMenu...", "Bfme1Client");
@@ -222,7 +173,7 @@ namespace The_BFME_API.BFME1
                 }
             });
 
-            await Task.Run(() => Thread.Sleep(1100));
+            await Task.Run(() => Thread.Sleep(200));
 
             Logger.LogDiagnostic("Waiting for NetworkMenu... DONE!", "Bfme1Client");
         }
@@ -258,8 +209,6 @@ namespace The_BFME_API.BFME1
             await Task.Run(() =>
             {
                 InputHelper.Click(ConfigManager.GetPosFromConfig("ButtonMultiplayer"));
-                Thread.Sleep(100);
-                InputHelper.SetMousePos(new Point(0, 0));
                 Thread.Sleep(100);
             });
         }
@@ -368,7 +317,11 @@ namespace The_BFME_API.BFME1
 
             await Task.Run(() =>
             {
+                Stopwatch sw = Stopwatch.StartNew();
                 List<Rectangle> spots = ScreenReader.GetMapSpots(IsHost ? Point.Empty : ConfigManager.GetPosFromConfig("NonHostMapSpotOffset"));
+                sw.Stop();
+
+                Logger.LogDiagnostic($"Generated spot indexes in {sw.Elapsed.TotalMilliseconds}ms", "Bfme1Client");
 
                 Point c = new Point(spots[SpotIndex].X + spots[SpotIndex].Width / 2, spots[SpotIndex].Y + spots[SpotIndex].Height / 2);
 
@@ -470,28 +423,40 @@ namespace The_BFME_API.BFME1
     public enum PlayerColor
     {
         Random = -1,
-        Green = 0,
+        Blue = 0,
         Red = 1,
-        Pink = 2,
-        Blue = 3,
-        LightBlue = 4,
-        Lime = 5,
-        Turquoise = 6,
-        Orange = 7,
-        Yellow = 8,
-        Purple = 9,
-        LightPink = 10,
-        Gray = 11,
-        White = 12
+        LightGreen = 2,
+        Green = 3,
+        Orange = 4,
+        LightBlue = 5,
+        Purple = 6,
+        Pink = 7,
+        Gray = 8,
+        White = 9
     }
 
     public enum PlayerArmy
     {
         Random = -1,
-        Rohan = 2,
-        Gondor = 3,
-        Isengard = 4,
-        Mordor = 5
+        Men = 3,
+        Elves = 5,
+        Dwarves = 6,
+        Isengard = 7,
+        Mordor = 8,
+        Goblins = 9
+    }
+
+    public enum PlayerHero
+    {
+        Random = -2,
+        None = -1,
+        Hadhod = 6,
+        Berethor = 5,
+        Idrial = 4,
+        Krashnak = 3,
+        Thrugg = 2,
+        Morven = 1,
+        Fhaleen = 0
     }
 
     public enum PlayerTeam

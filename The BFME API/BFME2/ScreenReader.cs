@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
 using System.Runtime.InteropServices;
 
-namespace The_BFME_API.BFME1
+namespace The_BFME_API.BFME2
 {
     internal static class ScreenReader
     {
@@ -13,36 +13,12 @@ namespace The_BFME_API.BFME1
             {
                 for (var x = 0; x < bitMap.Size.Width; x++)
                 {
-                    if ((bitMap.GetPixel(x, ConfigManager.GetPosFromConfig("ButtonMultiplayer").Y).GetBrightness() * 100) > 25)
+                    var pixel = bitMap.GetPixel(x, ConfigManager.GetPosFromConfig("ButtonMultiplayer").Y);
+
+                    if (pixel.R >= 150 && pixel.R <= 170 && pixel.G >= 171 && pixel.G <= 191 && pixel.B >= 85 && pixel.B <= 105)
                     {
                         double relativeButtonPosition = (double)x / curentResolution.Width * 100d;
-
-                        if(relativeButtonPosition > 5d && relativeButtonPosition < 6.5d)
-                        {
-                            return true;
-                        }
-
-                        return false;
-                    }
-                }
-            }
-
-            return false;
-        }
-
-        public static bool IsMenu2Visible()
-        {
-            Size curentResolution = GameDataManager.GetCurentResolution();
-
-            using (Bitmap bitMap = GrabScreen())
-            {
-                for (var x = 0; x < bitMap.Size.Width; x++)
-                {
-                    if ((bitMap.GetPixel(x, ConfigManager.GetPosFromConfig("ButtonMultiplayer").Y).GetBrightness() * 100) > 25)
-                    {
-                        double relativeButtonPosition = (double)x / curentResolution.Width * 100d;
-
-                        if (relativeButtonPosition > 18d && relativeButtonPosition < 21d)
+                        if(relativeButtonPosition > 6d && relativeButtonPosition < 7d)
                         {
                             return true;
                         }
@@ -57,23 +33,11 @@ namespace The_BFME_API.BFME1
 
         public static bool IsMenuCustomGameLobbyVisible()
         {
-            Size curentResolution = GameDataManager.GetCurentResolution();
-
             using (Bitmap bitMap = GrabScreen())
             {
-                for (var x = 0; x < bitMap.Size.Width; x++)
+                if(bitMap.GetPixel(ConfigManager.GetPosFromConfig("ButtonOpenPlay").X, ConfigManager.GetPosFromConfig("ButtonOpenPlay").Y).GetBrightness() * 100 > 55)
                 {
-                    if ((bitMap.GetPixel(x, ConfigManager.GetPosFromConfig("ButtonMultiplayer").Y).GetBrightness() * 100) > 25)
-                    {
-                        double relativeButtonPosition = (double)x / curentResolution.Width * 100d;
-
-                        if (relativeButtonPosition > 0d && relativeButtonPosition < 2d)
-                        {
-                            return true;
-                        }
-
-                        return false;
-                    }
+                    return true;
                 }
             }
 
@@ -82,27 +46,15 @@ namespace The_BFME_API.BFME1
 
         public static bool IsInLobby()
         {
-            Size curentResolution = GameDataManager.GetCurentResolution();
-
             using (Bitmap bitMap = GrabScreen())
             {
-                for (var x = 0; x < bitMap.Size.Width; x++)
+                if (bitMap.GetPixel(ConfigManager.GetPosFromConfig("ButtonOpenPlay").X, ConfigManager.GetPosFromConfig("ButtonOpenPlay").Y).GetBrightness() * 100 > 55)
                 {
-                    if ((bitMap.GetPixel(x, ConfigManager.GetPosFromConfig("ButtonMultiplayer").Y).GetBrightness() * 100) > 25)
-                    {
-                        double relativeButtonPosition = (double)x / curentResolution.Width * 100d;
-
-                        if (relativeButtonPosition > 30d)
-                        {
-                            return true;
-                        }
-
-                        return false;
-                    }
+                    return false;
                 }
             }
 
-            return false;
+            return true;
         }
 
         public static int GetPlayerYLocationOnScreen()
@@ -115,7 +67,7 @@ namespace The_BFME_API.BFME1
                 {
                     var pixel = bitMap.GetPixel(ConfigManager.GetPosFromConfig("TeamButtonXAndSize").X, y);
 
-                    if (pixel.R >= 223 && pixel.R <= 243 && pixel.G >= 144 && pixel.G <= 164 && pixel.B >= 58 && pixel.B <= 78)
+                    if (pixel.R >= 112 && pixel.R <= 132 && pixel.G >= 235 && pixel.G <= 255 && pixel.B < 10)
                     {
                         return y;
                     }
@@ -136,7 +88,7 @@ namespace The_BFME_API.BFME1
                 {
                     var pixel = bitMap.GetPixel(ConfigManager.GetPosFromConfig("TeamButtonXAndSize").X, y);
 
-                    if (pixel.R == 122 && pixel.G == 48 && pixel.B == 1)
+                    if (pixel.R == 106 && pixel.G == 171 && pixel.B == 84)
                     {
                         if (height == -1)
                         {
@@ -173,7 +125,7 @@ namespace The_BFME_API.BFME1
             {
                 for (int i = 0; i < 8; i++)
                 {
-                    Point spotFirstPixelPos = System.Drawing.Point.Empty;
+                    Point spotFirstPixelPos = Point.Empty;
 
                     int minY = 0;
                     int maxY = 0;
@@ -255,40 +207,6 @@ namespace The_BFME_API.BFME1
 
                 var pixel = bitMap.GetPixel(x, y);
                 return pixel.GetHue() > 40 && pixel.GetHue() < 47 && pixel.GetSaturation() * 100 > 90 && pixel.GetBrightness() * 100 > 10;
-            }
-        }
-
-        public static bool IsVictoriousTitleVisible()
-        {
-            using (Bitmap bitMap = GrabScreen())
-            {
-                int mistakes = 0;
-
-                for(int i = 1; i < 14; i++)
-                {
-                    var pixelPosition = ConfigManager.GetPosFromConfig($"VictoryPixel{i}");
-                    var pixel = bitMap.GetPixel(pixelPosition.X, pixelPosition.Y);
-
-                    if (pixel.R >= 237 && pixel.R <= 241 && pixel.G >= 218 && pixel.G <= 228 && pixel.B >= 155 && pixel.B <= 164)
-                    {
-                        continue;
-                    }
-                    else
-                    {
-                        pixel = bitMap.GetPixel(pixelPosition.X - (i >= 11 ? 4 : 0), pixelPosition.Y - 6);
-
-                        if (pixel.R >= 205 && pixel.R <= 220 && pixel.G >= 220 && pixel.G <= 232 && pixel.B >= 230 && pixel.B <= 245)
-                        {
-                            continue;
-                        }
-                        else
-                        {
-                            mistakes++;
-                        }
-                    }
-                }
-
-                return mistakes <= 3;
             }
         }
 

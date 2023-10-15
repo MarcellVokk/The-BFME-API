@@ -14,7 +14,7 @@ namespace The_BFME_API.Network
 
         public NetworkClient()
         {
-            if (!(new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator)))
+            if (!new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator))
             {
                 throw new AccessViolationException("NetworkClient needs administrator privelidges to work!");
             }

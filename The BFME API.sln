@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameExample", "GameExample\GameExample.csproj", "{F86F56FA-2F04-420E-A413-EF0D8909F2A6}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetworkingExample", "NetworkingExample\NetworkingExample.csproj", "{2B3FE06F-BB6E-4C34-9F48-CF9862D01E96}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "The BFME API", "The BFME API\The BFME API.csproj", "{3084446C-9A98-4D7A-A5AE-5D1B510B1DDF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolsExample", "ToolsExample\ToolsExample.csproj", "{786E1091-7697-43F1-B0E7-88B495BBB089}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToolsExample", "ToolsExample\ToolsExample.csproj", "{786E1091-7697-43F1-B0E7-88B495BBB089}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameExampleBfme2", "GameExampleBfme2\GameExampleBfme2.csproj", "{6160D180-995E-4D7D-9940-2D763F430925}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameExampleBfme1", "GameExampleBfme1\GameExampleBfme1.csproj", "{E0F4CDC8-DE49-4780-943F-F88213E7C2A8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +19,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{F86F56FA-2F04-420E-A413-EF0D8909F2A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F86F56FA-2F04-420E-A413-EF0D8909F2A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F86F56FA-2F04-420E-A413-EF0D8909F2A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F86F56FA-2F04-420E-A413-EF0D8909F2A6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2B3FE06F-BB6E-4C34-9F48-CF9862D01E96}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2B3FE06F-BB6E-4C34-9F48-CF9862D01E96}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2B3FE06F-BB6E-4C34-9F48-CF9862D01E96}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -33,6 +31,14 @@ Global
 		{786E1091-7697-43F1-B0E7-88B495BBB089}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{786E1091-7697-43F1-B0E7-88B495BBB089}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{786E1091-7697-43F1-B0E7-88B495BBB089}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6160D180-995E-4D7D-9940-2D763F430925}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6160D180-995E-4D7D-9940-2D763F430925}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6160D180-995E-4D7D-9940-2D763F430925}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6160D180-995E-4D7D-9940-2D763F430925}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E0F4CDC8-DE49-4780-943F-F88213E7C2A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E0F4CDC8-DE49-4780-943F-F88213E7C2A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E0F4CDC8-DE49-4780-943F-F88213E7C2A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E0F4CDC8-DE49-4780-943F-F88213E7C2A8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

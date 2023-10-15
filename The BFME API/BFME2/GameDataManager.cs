@@ -2,7 +2,7 @@
 using System.Drawing;
 using The_BFME_API.Logging;
 
-namespace The_BFME_API.BFME1
+namespace The_BFME_API.BFME2
 {
     internal static class GameDataManager
     {
@@ -10,7 +10,7 @@ namespace The_BFME_API.BFME1
         {
             try
             {
-                RegistryKey? key = Registry.LocalMachine.OpenSubKey(@$"SOFTWARE\WOW6432Node\Electronic Arts\EA Games\The Battle for Middle-earth", false);
+                RegistryKey? key = Registry.LocalMachine.OpenSubKey(@$"SOFTWARE\WOW6432Node\Electronic Arts\Electronic Arts\The Battle for Middle-earth II", false);
 
                 if (key != null)
                 {
@@ -31,7 +31,7 @@ namespace The_BFME_API.BFME1
         {
             try
             {
-                RegistryKey? key = Registry.LocalMachine.OpenSubKey(@$"SOFTWARE\WOW6432Node\Electronic Arts\EA Games\The Battle for Middle-earth", false);
+                RegistryKey? key = Registry.LocalMachine.OpenSubKey(@$"SOFTWARE\WOW6432Node\Electronic Arts\Electronic Arts\The Battle for Middle-earth II", false);
 
                 if (key != null)
                 {
@@ -52,7 +52,7 @@ namespace The_BFME_API.BFME1
         {
             try
             {
-                RegistryKey? key = Registry.LocalMachine.OpenSubKey(@$"SOFTWARE\WOW6432Node\Electronic Arts\EA Games\The Battle for Middle-earth", false);
+                RegistryKey? key = Registry.LocalMachine.OpenSubKey(@$"SOFTWARE\WOW6432Node\Electronic Arts\Electronic Arts\The Battle for Middle-earth II", false);
 
                 if (key != null)
                 {
@@ -63,10 +63,10 @@ namespace The_BFME_API.BFME1
             }
             catch
             {
-                return "My Battle for Middle-earth Files";
+                return "My Battle for Middle-earth II Files";
             }
 
-            return "My Battle for Middle-earth Files";
+            return "My Battle for Middle-earth II Files";
         }
 
         public static Size GetCurentResolution()
@@ -99,24 +99,26 @@ namespace The_BFME_API.BFME1
             return new Size(0, 0);
         }
 
-        public static void SetPlayerSettings(string mapId, int armyId, string username, int color)
+        public static void SetLaunchSettings(string mapId, int armyId, int heroId, string username, int color, int commandPointFactor, int initialResources, bool allowCustomHeroes, bool allowRingHeroes)
         {
-            Logger.LogDiagnostic("Updating Network.ini...", "GameDataManager");
+            Logger.LogDiagnostic("Updating NetworkPref.ini...", "GameDataManager");
 
             Dictionary<string, string> settings = new Dictionary<string, string>
             {
-                { "Map", mapId },
-                { "PlayerTemplate", armyId.ToString() },
+                { "Rts:Map", mapId },
+                { "Rts:Hero", heroId.ToString() },
+                { "Rts:PlayerTemplate", armyId.ToString() },
                 { "UserName", string.Join("", username.ToCharArray().Select(x => x + "_00")) },
-                { "Color", color.ToString() }
+                { "Rts:Color", color.ToString() },
+                { "Rts:Rules", $"{(allowCustomHeroes ? "1" : "0")} 0 {(allowRingHeroes ? "1" : "0")} {commandPointFactor} {initialResources} -1 -1 -1 -1 -1 " }
             };
 
-            using (StreamWriter sw = new StreamWriter(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), GetGameUserDataFolderName(), "Network.ini")))
+            using (StreamWriter sw = new StreamWriter(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), GetGameUserDataFolderName(), "NetworkPref.ini")))
             {
                 sw.Write(string.Join('\n', settings.Select(x => $"{x.Key} = {x.Value}")));
             }
 
-            Logger.LogDiagnostic("Updating Network.ini... DONE!", "GameDataManager");
+            Logger.LogDiagnostic("Updating NetworkPref.ini... DONE!", "GameDataManager");
         }
     }
 }
