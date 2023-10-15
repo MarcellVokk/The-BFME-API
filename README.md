@@ -7,6 +7,7 @@ The best way is probably to add it via NuGet: https://www.nuget.org/packages/The
 ## Supported games
 - BFME1
 - BFME2
+- RotWK
 
 ## Features
 - Create virtual LAN networks so you and your opponents can play while on completely different networks
