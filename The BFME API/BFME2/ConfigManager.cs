@@ -1,5 +1,4 @@
 ﻿using System.Drawing;
-using The_BFME_API.Logging;
 
 namespace The_BFME_API.BFME2
 {
@@ -12,7 +11,7 @@ namespace The_BFME_API.BFME2
             { "ButtonOpenPlay", new Point(1135, 1355) },
 
             { "ButtonCreateGame", new Point(2140, 660) },
-            { "CurentGamesFirstItem", new Point(1280, 455) },
+            { "CurentGamesFirstItem", new Point(1575, 375) },
 
             { "TeamButtonXAndSize", new Point(1828, 38) },
 

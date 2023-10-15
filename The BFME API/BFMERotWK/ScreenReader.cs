@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 using The_BFME_API.BFME_Shared;
 
-namespace The_BFME_API.BFME2
+namespace The_BFME_API.BFMERotWK
 {
     internal static class ScreenReader
     {
@@ -16,10 +16,10 @@ namespace The_BFME_API.BFME2
                 {
                     var pixel = bitMap.GetPixel(x, ConfigManager.GetPosFromConfig("ButtonMultiplayer").Y);
 
-                    if (pixel.R >= 150 && pixel.R <= 170 && pixel.G >= 171 && pixel.G <= 191 && pixel.B >= 85 && pixel.B <= 105)
+                    if (pixel.R >= 104 && pixel.R <= 124 && pixel.G >= 144 && pixel.G <= 164 && pixel.B >= 160 && pixel.B <= 180)
                     {
                         double relativeButtonPosition = (double)x / curentResolution.Width * 100d;
-                        if(relativeButtonPosition > 6d && relativeButtonPosition < 7d)
+                        if(relativeButtonPosition > 7d && relativeButtonPosition < 8.5d)
                         {
                             return true;
                         }
@@ -68,7 +68,7 @@ namespace The_BFME_API.BFME2
                 {
                     var pixel = bitMap.GetPixel(ConfigManager.GetPosFromConfig("TeamButtonXAndSize").X, y);
 
-                    if (pixel.R >= 112 && pixel.R <= 132 && pixel.G >= 235 && pixel.G <= 255 && pixel.B < 10)
+                    if (pixel.R >= 151 && pixel.R <= 171 && pixel.G >= 187 && pixel.G <= 207 && pixel.B >= 213 && pixel.B <= 223)
                     {
                         return y;
                     }
@@ -89,7 +89,7 @@ namespace The_BFME_API.BFME2
                 {
                     var pixel = bitMap.GetPixel(ConfigManager.GetPosFromConfig("TeamButtonXAndSize").X, y);
 
-                    if (pixel.R == 106 && pixel.G == 171 && pixel.B == 84)
+                    if (pixel.R == 127 && pixel.G == 170 && pixel.B == 187)
                     {
                         if (height == -1)
                         {

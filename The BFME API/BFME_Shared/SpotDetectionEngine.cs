@@ -1,25 +1,20 @@
-﻿using OpenCvSharp;
-using OpenCvSharp.Extensions;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using The_BFME_API.BFME1;
+﻿using System.Drawing;
 
-namespace The_BFME_API_by_MarcellVokk.Tools
+namespace The_BFME_API.BFME_Shared
 {
-    public static class MapSpotPreviewTool
+    public static class SpotDetectionEngine
     {
-        public static Bitmap DrawMapSpotsPreview(Bitmap mapImage)
+        public static List<Rectangle> GetMapSpots(Bitmap mapImage, Rectangle? mapBounds = null)
         {
+            Rectangle _mapBounds = new Rectangle(0, 0, mapImage.Width, mapImage.Height);
+
+            if (mapBounds is not null) _mapBounds = mapBounds.Value;
+
             List<Rectangle> spots = new List<Rectangle>();
 
             for (int i = 0; i < 8; i++)
             {
-                System.Drawing.Point spotFirstPixelPos = System.Drawing.Point.Empty;
+                Point spotFirstPixelPos = Point.Empty;
 
                 int minY = 0;
                 int maxY = 0;
@@ -30,13 +25,13 @@ namespace The_BFME_API_by_MarcellVokk.Tools
                 int padding = 0;
 
                 bool foundSpot = false;
-                for (var y = 0; y < mapImage.Height; y++)
+                for (var y = _mapBounds.Y; y < _mapBounds.Y + _mapBounds.Height; y++)
                 {
-                    for (var x = 0; x < mapImage.Width; x++)
+                    for (var x = _mapBounds.X; x < _mapBounds.X + _mapBounds.Width; x++)
                     {
                         if (isSpotPixel(x, y, mapImage))
                         {
-                            spotFirstPixelPos = new System.Drawing.Point(x, y);
+                            spotFirstPixelPos = new Point(x, y);
                             foundSpot = true;
                             break;
                         }
@@ -46,7 +41,7 @@ namespace The_BFME_API_by_MarcellVokk.Tools
 
                 if (!foundSpot) break;
 
-                for (var y = spotFirstPixelPos.Y; y < mapImage.Height; y++)
+                for (var y = spotFirstPixelPos.Y; y < _mapBounds.Y + _mapBounds.Height; y++)
                 {
                     if (!isSpotPixel(spotFirstPixelPos.X, y, mapImage, true))
                     {
@@ -55,7 +50,7 @@ namespace The_BFME_API_by_MarcellVokk.Tools
                     }
                 }
 
-                for (var y = minY; y < mapImage.Height; y++)
+                for (var y = minY; y < _mapBounds.Y + _mapBounds.Height; y++)
                 {
                     if (isSpotPixel(spotFirstPixelPos.X, y, mapImage, true))
                     {
@@ -64,7 +59,7 @@ namespace The_BFME_API_by_MarcellVokk.Tools
                     }
                 }
 
-                for (var x = spotFirstPixelPos.X; x > 0; x--)
+                for (var x = spotFirstPixelPos.X; x > _mapBounds.X; x--)
                 {
                     if (isSpotPixel(x, minY + (maxY - minY) / 2, mapImage, true))
                     {
@@ -73,7 +68,7 @@ namespace The_BFME_API_by_MarcellVokk.Tools
                     }
                 }
 
-                for (var x = spotFirstPixelPos.X; x < mapImage.Width; x++)
+                for (var x = spotFirstPixelPos.X; x < _mapBounds.X + _mapBounds.Width; x++)
                 {
                     if (isSpotPixel(x, minY + (maxY - minY) / 2, mapImage, true))
                     {
@@ -89,23 +84,7 @@ namespace The_BFME_API_by_MarcellVokk.Tools
                 spots.Add(new Rectangle(spot.X - padding - 1, spot.Y - padding, spot.Width + 2 * padding + 4, spot.Height + 2 * padding + 2));
             }
 
-            using (Mat m = mapImage.ToMat())
-            {
-                Cv2.CvtColor(m, m, ColorConversionCodes.RGB2BGR);
-
-                int index = 0;
-                foreach (var item in spots)
-                {
-                    m.Rectangle(new Rect(item.X, item.Y, item.Width, item.Height), new Scalar(255, 0, 0), 1);
-                    m.PutText(index.ToString(), new OpenCvSharp.Point(item.X - 5, item.Y + 5), HersheyFonts.HersheySimplex, 1, new Scalar(255, 255, 255));
-                    m.Circle(new OpenCvSharp.Point(item.X + item.Width / 2, item.Y + item.Height / 2), 3, new Scalar(0, 255, 0), -1);
-                    index++;
-                }
-
-                Cv2.CvtColor(m, m, ColorConversionCodes.BGR2RGB);
-
-                return m.ToBitmap();
-            }
+            return spots;
 
             bool isSpotPixel(int x, int y, Bitmap bitMap, bool allowKnownSpots = false)
             {

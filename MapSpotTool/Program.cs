@@ -1,4 +1,4 @@
-namespace ToolsExample
+namespace MapSpotTool
 {
     internal static class Program
     {

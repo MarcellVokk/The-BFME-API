@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Text;
+using The_BFME_API.BFME_Shared;
 using The_BFME_API.Logging;
 
 namespace The_BFME_API.BFME2
@@ -317,11 +318,9 @@ namespace The_BFME_API.BFME2
 
             await Task.Run(() =>
             {
-                Stopwatch sw = Stopwatch.StartNew();
-                List<Rectangle> spots = ScreenReader.GetMapSpots(IsHost ? Point.Empty : ConfigManager.GetPosFromConfig("NonHostMapSpotOffset"));
-                sw.Stop();
-
-                Logger.LogDiagnostic($"Generated spot indexes in {sw.Elapsed.TotalMilliseconds}ms", "Bfme1Client");
+                Point ingameMapSize = ConfigManager.GetPosFromConfig("MapSize");
+                Point ingameMapTopLeft = ConfigManager.GetPosFromConfig("MapTopLeft");
+                List<Rectangle> spots = SpotDetectionEngine.GetMapSpots(ScreenReader.GrabScreen(), new Rectangle(ingameMapTopLeft, new Size(ingameMapSize.X, ingameMapSize.Y)));
 
                 Point c = new Point(spots[SpotIndex].X + spots[SpotIndex].Width / 2, spots[SpotIndex].Y + spots[SpotIndex].Height / 2);
 
@@ -450,13 +449,13 @@ namespace The_BFME_API.BFME2
     {
         Random = -2,
         None = -1,
-        Hadhod = 6,
-        Berethor = 5,
-        Idrial = 4,
-        Krashnak = 3,
-        Thrugg = 2,
+        Fhaleen = 0,
         Morven = 1,
-        Fhaleen = 0
+        Thrugg = 2,
+        Krashnak = 3,
+        Idrial = 4,
+        Berethor = 5,
+        Hadhod = 6,
     }
 
     public enum PlayerTeam

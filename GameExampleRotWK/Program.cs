@@ -1,6 +1,6 @@
-﻿using The_BFME_API.BFME2;
+﻿using The_BFME_API.BFMERotWK;
 
-namespace GameExampleBfme2
+namespace GameExampleBfmeRotWK
 {
     class Program
     {
@@ -9,7 +9,7 @@ namespace GameExampleBfme2
             // Initialize the logger
             The_BFME_API.Logging.Logger.OnDiagnostic += (s, e) => { Console.WriteLine(e); };
 
-            // This function demonstrates the BFME1 client interface portion of the API, and explains how to use it
+            // This function demonstrates the BFME RotWK client interface portion of the API, and explains how to use it
             await Bfme2ClientDemo();
 
             Console.WriteLine("The program completed successfuly! Press return to exit.");
@@ -21,14 +21,14 @@ namespace GameExampleBfme2
             // This is just a demonstration, for the actual networking to work, you'd use the networking portion of the API
             // To create a room and put all the participating players in the same network before you start launching the game.
 
-            // Create a new Bfme2Client instance, and assign our players settings
-            Bfme2Client gameClient = new Bfme2Client
+            // Create a new BfmeRotWKClient instance, and assign our players settings
+            BfmeRotWKClient gameClient = new BfmeRotWKClient
             {
                 CancelationAssertion = CancellationAssertion,
                 Username = "Hello world",
-                PlayerColor = PlayerColor.Green,
+                PlayerColor = PlayerColor.Blue,
                 MapId = "maps_5Cmap_20wor_20mordor_5Cmap_20wor_20mordor_2Emap",
-                Army = PlayerArmy.Elves,
+                Army = PlayerArmy.Angmar,
                 Hero = PlayerHero.None,
                 Team = PlayerTeam.Team2,
                 SpotIndex = 0

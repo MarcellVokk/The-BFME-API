@@ -1,4 +1,4 @@
-﻿namespace ToolsExample
+﻿namespace MapSpotTool
 {
     partial class Form1
     {
@@ -29,10 +29,10 @@
         private void InitializeComponent()
         {
             groupBox1 = new GroupBox();
+            label1 = new Label();
             button2 = new Button();
             button1 = new Button();
             pictureBox1 = new PictureBox();
-            label1 = new Label();
             groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
@@ -49,6 +49,14 @@
             groupBox1.TabIndex = 0;
             groupBox1.TabStop = false;
             groupBox1.Text = "Map spots preview renderer";
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(168, 399);
+            label1.Name = "label1";
+            label1.Size = new Size(0, 15);
+            label1.TabIndex = 2;
             // 
             // button2
             // 
@@ -78,14 +86,6 @@
             pictureBox1.Size = new Size(764, 367);
             pictureBox1.TabIndex = 0;
             pictureBox1.TabStop = false;
-            // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.Location = new Point(168, 399);
-            label1.Name = "label1";
-            label1.Size = new Size(0, 15);
-            label1.TabIndex = 2;
             // 
             // Form1
             // 

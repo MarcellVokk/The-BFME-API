@@ -26,7 +26,7 @@ namespace GameExampleBfme1
             {
                 CancelationAssertion = CancellationAssertion,
                 Username = "Hello world",
-                PlayerColor = PlayerColor.Purple,
+                PlayerColor = PlayerColor.Orange,
                 MapId = "maps_5Cmap_20mp_20dagorlad_5Cmap_20mp_20dagorlad_2Emap",
                 Army = PlayerArmy.Mordor,
                 Team = PlayerTeam.Team2,
