@@ -12,7 +12,7 @@ The best way is probably to add it via NuGet: https://www.nuget.org/packages/The
 ## Features
 - Create virtual LAN networks so you and your opponents can play while on completely different networks
 - Launch BFME as host or offhost and automaticaly:
-  - Create a new room if host, or join the room the host created on that network if offhost
+  - Automaticaly Create ingame room if host or join available ingame room if offhost
   - Set player username
   - Set player color
   - Select player army
