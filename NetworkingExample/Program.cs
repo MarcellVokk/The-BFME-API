@@ -23,7 +23,7 @@ namespace NetworkingExample
 
             // IMPORTANT: The app needs to be running under administrator privileges, otherwise creating a NetworkClient will throw an exception!
             NetworkClient client = new NetworkClient();
-            await client.CleanUp();
+            await client.Init();
 
             await client.JoinRoom(newRoomId);
             Console.WriteLine($"Joined room successfuly!");

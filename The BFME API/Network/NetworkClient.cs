@@ -10,6 +10,7 @@ namespace The_BFME_API.Network
     public class NetworkClient
     {
         public string CurrentRoomId = "";
+        private bool Initialized = false;
 
         public NetworkClient()
         {
@@ -67,34 +68,14 @@ namespace The_BFME_API.Network
 
             }
 
-            Logger.LogDiagnostic("Starting ZeroTier service...", "NetworkClient");
-
             Process.Start(new ProcessStartInfo("cmd", @$"/C ""{Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "ZeroTier", "One")}\zerotier-one_x64.exe"" -I") { CreateNoWindow = true })?.WaitForExit();
 
-            ServiceController service = new ServiceController("ZeroTierOneService");
-
-            if (service != null && service.Status == ServiceControllerStatus.Stopped)
-            {
-                try
-                {
-                    service.Start();
-                }
-                catch
-                {
-
-                }
-            }
-
-            Logger.LogDiagnostic("Starting ZeroTier service... DONE!", "NetworkClient");
-
             RegistryHelper.DisableNewNetworkPopup();
-
-            Logger.LogDiagnostic("Initialized!", "NetworkClient");
         }
 
-        public async Task CleanUp()
+        public async Task Init()
         {
-            Logger.LogDiagnostic("Cleaning up...", "NetworkClient");
+            Logger.LogDiagnostic("Initializing...", "NetworkClient");
 
             ServiceController service = new ServiceController("ZeroTierOneService");
 
@@ -122,7 +103,9 @@ namespace The_BFME_API.Network
                 }
             });
 
-            Logger.LogDiagnostic("Cleaning up... DONE!", "NetworkClient");
+            Initialized = true;
+
+            Logger.LogDiagnostic("Initializing... DONE!", "NetworkClient");
         }
 
         public void Dispose()
@@ -157,6 +140,8 @@ namespace The_BFME_API.Network
 
         public async Task<string> JoinRoom(string roomId, Action cancellationAssertion = null)
         {
+            if (!Initialized) throw new Exception("Not initialized! Call .Init() on client instance after constructor.");
+
             await LeaveRoom(true);
 
             Logger.LogDiagnostic($"Joining room {roomId}...", "NetworkClient");
@@ -190,6 +175,8 @@ namespace The_BFME_API.Network
 
         public async Task LeaveRoom(bool waitIfWasConnected = false)
         {
+            if (!Initialized) throw new Exception("Not initialized! Call .Init() on client instance after constructor.");
+
             Logger.LogDiagnostic($"Leaving room...", "NetworkClient");
 
             CurrentRoomId = "";
@@ -222,6 +209,8 @@ namespace The_BFME_API.Network
 
         public async Task<string> GetLocalClientIp(Action cancellationAssertion = null)
         {
+            if (!Initialized) throw new Exception("Not initialized! Call .Init() on client instance after constructor.");
+
             string result = "<error>";
 
             await Task.Run(() =>
@@ -268,6 +257,8 @@ namespace The_BFME_API.Network
 
         private List<string> GetAllCurrentRooms()
         {
+            if (!Initialized) throw new Exception("Not initialized! Call .Init() on client instance after constructor.");
+
             string result = "";
 
             Process? get_ip_process = Process.Start(new ProcessStartInfo("cmd", $@"/C ""{Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "ZeroTier", "One")}\zerotier-one_x64.exe"" -q -j listnetworks") { RedirectStandardOutput = true, CreateNoWindow = true });
