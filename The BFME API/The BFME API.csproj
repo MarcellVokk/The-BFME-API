@@ -14,7 +14,7 @@
     <Authors>Gazdag Marcell</Authors>
     <Description>This Library allows you to launch and interact with BFME games as well as create virual LAN network rooms to play together even when you and other players are not on the same network.</Description>
     <PackageProjectUrl>https://github.com/MarcellVokk/The-BFME-API</PackageProjectUrl>
-    <Version>1.1.1</Version>
+    <Version>1.2</Version>
   </PropertyGroup>
 
   <ItemGroup>
