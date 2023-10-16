@@ -39,20 +39,20 @@ namespace GameExampleBfmeRotWK
                 Console.WriteLine($"Launching game...");
 
                 // Launch game as host
-                await gameClient.LaunchAsHost();
+                //await gameClient.LaunchAsHost();
                 // Optionaly, you can also provide gamerules
                 // await gameClient.LaunchAsHost(initialResources: 1000, commandPointFactor: 100, allowCustomHeroes: false, allowRingHeroes: false);
 
                 // Launch game as offhost
-                // await gameClient.LaunchAsOffhost(() =>
-                // {
-                //     // Wait on the main menu until the host is ready...
-                //     bool isHostReady = true;
-                //     while (!isHostReady) { }
-                // });
+                await gameClient.LaunchAsOffhost(() =>
+                {
+                    // Wait on the main menu until the host is ready...
+                    bool isHostReady = true;
+                    while (!isHostReady) { }
+                });
 
                 // Start the game (only works on host)
-                gameClient.StartGame();
+                //gameClient.StartGame();
 
                 Console.WriteLine($"Game started!");
 

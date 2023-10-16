@@ -17,10 +17,14 @@ namespace The_BFME_API.BFME2
 
             { "ButtonStartGame", new Point(2325, 1365) },
 
+            { "ButtonMap", new Point(375, 320) },
             { "MapTopLeft", new Point(1100, 395) },
             { "MapSize", new Point(360, 270) },
-            { "NonHostMapSpotOffset", new Point(-21, 151) },
             { "MapSpotSize", new Point(50, 40) },
+
+            { "ButtonReady", new Point(2290, 0) },
+
+            { "OffHostOffset", new Point(-48, 151) },
 
             { "VictoryPixel1", new Point(1139, 719) },
             { "VictoryPixel2", new Point(1150, 719) },

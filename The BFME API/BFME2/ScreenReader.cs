@@ -58,7 +58,7 @@ namespace The_BFME_API.BFME2
             return true;
         }
 
-        public static int GetPlayerYLocationOnScreen()
+        public static int GetPlayerYLocationOnScreen(bool applyOffHostOffset)
         {
             Size curentResolution = GameDataManager.GetCurentResolution();
 
@@ -66,7 +66,7 @@ namespace The_BFME_API.BFME2
             {
                 for (var y = (int)(curentResolution.Height * 0.25d); y < bitMap.Size.Height; y++)
                 {
-                    var pixel = bitMap.GetPixel(ConfigManager.GetPosFromConfig("TeamButtonXAndSize").X, y);
+                    var pixel = bitMap.GetPixel(ConfigManager.GetPosFromConfig("TeamButtonXAndSize").X + (applyOffHostOffset ? ConfigManager.GetPosFromConfig("OffHostOffset").X : 0), y);
 
                     if (pixel.R >= 112 && pixel.R <= 132 && pixel.G >= 235 && pixel.G <= 255 && pixel.B < 10)
                     {
@@ -78,16 +78,16 @@ namespace The_BFME_API.BFME2
             return 0;
         }
 
-        public static Tuple<int, int> GetArmyDropdownHeightAndMinYPos()
+        public static Tuple<int, int> GetArmyDropdownHeightAndMinYPos(bool applyOffHostOffset)
         {
             using (Bitmap bitMap = GrabScreen())
             {
                 int height = -1;
                 int yMin = 0;
 
-                for (var y = GetPlayerYLocationOnScreen(); y < bitMap.Size.Height; y++)
+                for (var y = GetPlayerYLocationOnScreen(applyOffHostOffset); y < bitMap.Size.Height; y++)
                 {
-                    var pixel = bitMap.GetPixel(ConfigManager.GetPosFromConfig("TeamButtonXAndSize").X, y);
+                    var pixel = bitMap.GetPixel(ConfigManager.GetPosFromConfig("TeamButtonXAndSize").X + (applyOffHostOffset ? ConfigManager.GetPosFromConfig("OffHostOffset").X : 0), y);
 
                     if (pixel.R == 106 && pixel.G == 171 && pixel.B == 84)
                     {

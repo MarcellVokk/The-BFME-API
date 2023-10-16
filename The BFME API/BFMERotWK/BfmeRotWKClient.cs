@@ -60,14 +60,18 @@ namespace The_BFME_API.BFMERotWK
 
             await WaitForIngameNetworkJoined();
             await SelectTeam();
+
+            await GoToMap();
             await SelectSpot();
+
+            await ReadyUp();
         }
 
         public async void StartGame()
         {
             if (!IsHost)
             {
-                Logger.LogDiagnostic("Tried to start the game while not host...", "Bfme1Client");
+                Logger.LogDiagnostic("Tried to start the game while not host...", "BfmeRotWKClient");
             }
 
             InputHelper.Click(ConfigManager.GetPosFromConfig("ButtonStartGame"));
@@ -133,7 +137,7 @@ namespace The_BFME_API.BFMERotWK
 
         private async Task WaitForMenu1()
         {
-            Logger.LogDiagnostic("Waiting for Menu1...", "Bfme1Client");
+            Logger.LogDiagnostic("Waiting for Menu1...", "BfmeRotWKClient");
 
             await Task.Run(() =>
             {
@@ -152,12 +156,12 @@ namespace The_BFME_API.BFMERotWK
 
             await Task.Run(() => Thread.Sleep(1100));
 
-            Logger.LogDiagnostic("Waiting for Menu1... DONE!", "Bfme1Client");
+            Logger.LogDiagnostic("Waiting for Menu1... DONE!", "BfmeRotWKClient");
         }
 
         private async Task WaitForNetworkMenu()
         {
-            Logger.LogDiagnostic("Waiting for NetworkMenu...", "Bfme1Client");
+            Logger.LogDiagnostic("Waiting for NetworkMenu...", "BfmeRotWKClient");
 
             await Task.Run(() =>
             {
@@ -176,12 +180,12 @@ namespace The_BFME_API.BFMERotWK
 
             await Task.Run(() => Thread.Sleep(200));
 
-            Logger.LogDiagnostic("Waiting for NetworkMenu... DONE!", "Bfme1Client");
+            Logger.LogDiagnostic("Waiting for NetworkMenu... DONE!", "BfmeRotWKClient");
         }
 
         private async Task WaitForIngameNetworkJoined()
         {
-            Logger.LogDiagnostic("Waiting for ingame network to join...", "Bfme1Client");
+            Logger.LogDiagnostic("Waiting for ingame network to join...", "BfmeRotWKClient");
 
             await Task.Run(() =>
             {
@@ -200,12 +204,12 @@ namespace The_BFME_API.BFMERotWK
 
             await Task.Run(() => Thread.Sleep(500));
 
-            Logger.LogDiagnostic("Waiting for ingame network to join... DONE!", "Bfme1Client");
+            Logger.LogDiagnostic("Waiting for ingame network to join... DONE!", "BfmeRotWKClient");
         }
 
         private async Task GoToMultiplayerMenu()
         {
-            Logger.LogDiagnostic("Going to multiplayer menu...", "Bfme1Client");
+            Logger.LogDiagnostic("Going to multiplayer menu...", "BfmeRotWKClient");
 
             await Task.Run(() =>
             {
@@ -216,7 +220,7 @@ namespace The_BFME_API.BFMERotWK
 
         private async Task GoToNetworkMenu()
         {
-            Logger.LogDiagnostic("Going to network menu...", "Bfme1Client");
+            Logger.LogDiagnostic("Going to network menu...", "BfmeRotWKClient");
 
             await Task.Run(() =>
             {
@@ -229,7 +233,7 @@ namespace The_BFME_API.BFMERotWK
 
         private async Task CreateGame()
         {
-            Logger.LogDiagnostic("Creating ingame room...", "Bfme1Client");
+            Logger.LogDiagnostic("Creating ingame room...", "BfmeRotWKClient");
 
             await Task.Run(() =>
             {
@@ -240,7 +244,7 @@ namespace The_BFME_API.BFMERotWK
 
         private async Task JoinGame()
         {
-            Logger.LogDiagnostic("Joining ingame room...", "Bfme1Client");
+            Logger.LogDiagnostic("Joining ingame room...", "BfmeRotWKClient");
 
             await Task.Run(() =>
             {
@@ -263,16 +267,17 @@ namespace The_BFME_API.BFMERotWK
 
         private async Task SelectTeam()
         {
-            Logger.LogDiagnostic("Selecting team...", "Bfme1Client");
+            Logger.LogDiagnostic("Selecting team...", "BfmeRotWKClient");
 
             await Task.Run(() =>
             {
-                int playerYLocationOnScreen = ScreenReader.GetPlayerYLocationOnScreen();
+                int playerYLocationOnScreen = ScreenReader.GetPlayerYLocationOnScreen(!IsHost);
                 Tuple<int, int> armyDropdownHeightAndMinYPos = new Tuple<int, int>(0, 0);
 
                 for (int i = 0; i <= 5; i++)
                 {
                     var teamButtonXPosAndHeight = ConfigManager.GetPosFromConfig("TeamButtonXAndSize");
+                    teamButtonXPosAndHeight.Offset(new Point(!IsHost ? ConfigManager.GetPosFromConfig("OffHostOffset").X : 0, 0));
 
                     InputHelper.Click(new Point(0, 0), 20);
 
@@ -286,7 +291,7 @@ namespace The_BFME_API.BFMERotWK
                     {
                         Thread.Sleep(200);
 
-                        armyDropdownHeightAndMinYPos = ScreenReader.GetArmyDropdownHeightAndMinYPos();
+                        armyDropdownHeightAndMinYPos = ScreenReader.GetArmyDropdownHeightAndMinYPos(!IsHost);
                     }
 
                     switch (Team)
@@ -309,15 +314,30 @@ namespace The_BFME_API.BFMERotWK
                 }
             });
 
-            Logger.LogDiagnostic("Selecting team... DONE!", "Bfme1Client");
+            Logger.LogDiagnostic("Selecting team... DONE!", "BfmeRotWKClient");
+        }
+
+        private async Task GoToMap()
+        {
+            Logger.LogDiagnostic("Going to map...", "BfmeRotWKClient");
+
+            await Task.Run(() =>
+            {
+                InputHelper.Click(ConfigManager.GetPosFromConfig("ButtonMap"));
+                Thread.Sleep(100);
+                InputHelper.SetMousePos(new Point(0, 0));
+                Thread.Sleep(100);
+            });
         }
 
         private async Task SelectSpot()
         {
-            Logger.LogDiagnostic("Selecting spot...", "Bfme1Client");
+            Logger.LogDiagnostic("Selecting spot...", "BfmeRotWKClient");
 
             await Task.Run(() =>
             {
+                Thread.Sleep(300);
+
                 Point ingameMapSize = ConfigManager.GetPosFromConfig("MapSize");
                 Point ingameMapTopLeft = ConfigManager.GetPosFromConfig("MapTopLeft");
                 List<Rectangle> spots = SpotDetectionEngine.GetMapSpots(ScreenReader.GrabScreen(), new Rectangle(ingameMapTopLeft, new Size(ingameMapSize.X, ingameMapSize.Y)));
@@ -329,7 +349,23 @@ namespace The_BFME_API.BFMERotWK
 
             await Task.Run(() => Thread.Sleep(500));
 
-            Logger.LogDiagnostic("Selecting spot... DONE!", "Bfme1Client");
+            Logger.LogDiagnostic("Selecting spot... DONE!", "BfmeRotWKClient");
+        }
+
+        private async Task ReadyUp()
+        {
+            Logger.LogDiagnostic("Readying up...", "BfmeRotWKClient");
+
+            await Task.Run(() =>
+            {
+                Thread.Sleep(500);
+
+                int playerYLocationOnScreen = ScreenReader.GetPlayerYLocationOnScreen(!IsHost);
+                InputHelper.Click(new Point(ConfigManager.GetPosFromConfig("ButtonReady").X + (!IsHost ? ConfigManager.GetPosFromConfig("OffHostOffset").X : 0), playerYLocationOnScreen), 200);
+                Thread.Sleep(100);
+                InputHelper.SetMousePos(new Point(0, 0));
+                Thread.Sleep(100);
+            });
         }
 
         private async Task LaunchGame(bool windowed = false)
@@ -341,7 +377,7 @@ namespace The_BFME_API.BFMERotWK
                 throw new Exception();
             }
 
-            Logger.LogDiagnostic("Launching game...", "Bfme1Client");
+            Logger.LogDiagnostic("Launching game...", "BfmeRotWKClient");
 
             string[] files = Directory.GetFiles(GameDataManager.GetGameInstallDirectory());
 
@@ -398,7 +434,7 @@ namespace The_BFME_API.BFMERotWK
                 SetWindowPos(Process.GetProcessesByName("game.dat")[0].MainWindowHandle, IntPtr.Zero, screen.X, screen.Y, curentResolution.Width, curentResolution.Height, SWP_NOZORDER);
             }
 
-            Logger.LogDiagnostic("Launching game... DONE!", "Bfme1Client");
+            Logger.LogDiagnostic("Launching game... DONE!", "BfmeRotWKClient");
         }
 
         [DllImport("user32.dll")]

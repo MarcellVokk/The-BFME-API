@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace The_BFME_API.BFMERotWK
 {
-    internal static class InputHelper
+    public static class InputHelper
     {
         [DllImport("user32.dll", EntryPoint = "SetCursorPos")]
         private static extern bool SetMousePos(int x, int y);
