@@ -96,7 +96,7 @@ string newRoomId = await NetworkManagement.OpenRoom();
 
 // Create a networking client
 NetworkClient client = new NetworkClient();
-await client.CleanUp();
+await client.Init();
 
 // Join a room (in this case the one we just created)
 await client.JoinRoom(newRoomId);
