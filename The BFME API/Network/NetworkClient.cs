@@ -15,9 +15,7 @@ namespace The_BFME_API.Network
         public NetworkClient()
         {
             if (!new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator))
-            {
                 throw new AccessViolationException("NetworkClient needs administrator privelidges to work!");
-            }
 
             try
             {
@@ -131,9 +129,17 @@ namespace The_BFME_API.Network
 
         public static void Remove()
         {
+            if (!new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator))
+                throw new AccessViolationException("NetworkClient needs administrator privelidges to work!");
+
             Logger.LogDiagnostic("Removing ZeroTier binaries...", "NetworkClient");
 
             Process.Start(new ProcessStartInfo("cmd", @$"/C ""{Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "ZeroTier", "One")}\zerotier-one_x64.exe"" -R") { CreateNoWindow = true })?.WaitForExit();
+
+            if (!Directory.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "ZeroTier")))
+            {
+                Directory.Delete(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "ZeroTier"), true);
+            }
 
             Logger.LogDiagnostic("Removing ZeroTier binaries... DONE!", "NetworkClient");
         }
