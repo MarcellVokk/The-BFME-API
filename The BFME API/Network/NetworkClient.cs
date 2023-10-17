@@ -136,7 +136,7 @@ namespace The_BFME_API.Network
 
             Process.Start(new ProcessStartInfo("cmd", @$"/C ""{Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "ZeroTier", "One")}\zerotier-one_x64.exe"" -R") { CreateNoWindow = true })?.WaitForExit();
 
-            if (!Directory.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "ZeroTier")))
+            if (Directory.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "ZeroTier")))
             {
                 Directory.Delete(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "ZeroTier"), true);
             }
