@@ -159,38 +159,38 @@ namespace The_BFME_API.BFME1
             return new Tuple<int, int>(0, 0);
         }
 
-        public static bool IsVictoriousTitleVisible()
+        public static Bitmap GrabScreen()
         {
-            using (Bitmap bitMap = GrabScreen())
+            Size curentResolution = GameDataManager.GetCurentResolution();
+
+            Bitmap screenshot = new Bitmap(curentResolution.Width, curentResolution.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+
+            Graphics gfxScreenshot = Graphics.FromImage(screenshot);
+
+            Rectangle screen = GetPrimaryScreenBounds();
+
+            gfxScreenshot.CopyFromScreen(screen.X, screen.Y, 0, 0, curentResolution, CopyPixelOperation.SourceCopy);
+
+            gfxScreenshot.Dispose();
+
+            return screenshot;
+        }
+
+        public static Rectangle GetPrimaryScreenBounds()
+        {
+            IntPtr desktop = GetDesktopWindow();
+            IntPtr monitor = MonitorFromWindow(desktop, MONITOR_DEFAULTTOPRIMARY);
+
+            MONITORINFOEX monitorInfo = new MONITORINFOEX();
+            monitorInfo.cbSize = Marshal.SizeOf(monitorInfo);
+
+            if (GetMonitorInfo(monitor, ref monitorInfo))
             {
-                int mistakes = 0;
-
-                for(int i = 1; i < 14; i++)
-                {
-                    var pixelPosition = ConfigManager.GetPosFromConfig($"VictoryPixel{i}");
-                    var pixel = bitMap.GetPixel(pixelPosition.X, pixelPosition.Y);
-
-                    if (pixel.R >= 237 && pixel.R <= 241 && pixel.G >= 218 && pixel.G <= 228 && pixel.B >= 155 && pixel.B <= 164)
-                    {
-                        continue;
-                    }
-                    else
-                    {
-                        pixel = bitMap.GetPixel(pixelPosition.X - (i >= 11 ? 4 : 0), pixelPosition.Y - 6);
-
-                        if (pixel.R >= 205 && pixel.R <= 220 && pixel.G >= 220 && pixel.G <= 232 && pixel.B >= 230 && pixel.B <= 245)
-                        {
-                            continue;
-                        }
-                        else
-                        {
-                            mistakes++;
-                        }
-                    }
-                }
-
-                return mistakes <= 3;
+                RECT rc = monitorInfo.rcMonitor;
+                return new Rectangle(rc.Left, rc.Top, rc.Right - rc.Left, rc.Bottom - rc.Top);
             }
+
+            return Rectangle.Empty;
         }
 
         [StructLayout(LayoutKind.Sequential)]
@@ -223,39 +223,5 @@ namespace The_BFME_API.BFME1
         }
 
         public const int MONITOR_DEFAULTTOPRIMARY = 1;
-
-        public static Rectangle GetPrimaryScreenBounds()
-        {
-            IntPtr desktop = GetDesktopWindow();
-            IntPtr monitor = MonitorFromWindow(desktop, MONITOR_DEFAULTTOPRIMARY);
-
-            MONITORINFOEX monitorInfo = new MONITORINFOEX();
-            monitorInfo.cbSize = Marshal.SizeOf(monitorInfo);
-
-            if (GetMonitorInfo(monitor, ref monitorInfo))
-            {
-                RECT rc = monitorInfo.rcMonitor;
-                return new Rectangle(rc.Left, rc.Top, rc.Right - rc.Left, rc.Bottom - rc.Top);
-            }
-
-            return Rectangle.Empty;
-        }
-
-        public static Bitmap GrabScreen()
-        {
-            Size curentResolution = GameDataManager.GetCurentResolution();
-
-            Bitmap screenshot = new Bitmap(curentResolution.Width, curentResolution.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-
-            Graphics gfxScreenshot = Graphics.FromImage(screenshot);
-
-            Rectangle screen = GetPrimaryScreenBounds();
-
-            gfxScreenshot.CopyFromScreen(screen.X, screen.Y, 0, 0, curentResolution, CopyPixelOperation.SourceCopy);
-
-            gfxScreenshot.Dispose();
-
-            return screenshot;
-        }
     }
 }

@@ -42,7 +42,7 @@ namespace The_BFME_API.BFME2
             }
             catch
             {
-                return "english";
+                
             }
 
             return "english";
@@ -63,7 +63,7 @@ namespace The_BFME_API.BFME2
             }
             catch
             {
-                return "My Battle for Middle-earth II Files";
+                
             }
 
             return "My Battle for Middle-earth II Files";

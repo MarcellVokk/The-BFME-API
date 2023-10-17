@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
 using System.Runtime.InteropServices;
 
-namespace The_BFME_API.BFME2
+namespace The_BFME_API.BFME_Shared
 {
     internal static class InputHelper
     {
@@ -38,6 +38,24 @@ namespace The_BFME_API.BFME2
             Thread.Sleep(30);
             mouse_event((int)MouseEventFlags.LEFTUP, 0, 0, 0, 0);
             Thread.Sleep(20);
+
+            SetMousePos(Point.Empty);
+        }
+
+        public static void DoubleClick(Point position, int moveTimeMs = 80)
+        {
+            SetMousePos(position);
+
+            mouse_event((int)MouseEventFlags.LEFTDOWN, 0, 0, 0, 0);
+            Thread.Sleep(30);
+            mouse_event((int)MouseEventFlags.LEFTUP, 0, 0, 0, 0);
+            Thread.Sleep(30);
+            mouse_event((int)MouseEventFlags.LEFTDOWN, 0, 0, 0, 0);
+            Thread.Sleep(30);
+            mouse_event((int)MouseEventFlags.LEFTUP, 0, 0, 0, 0);
+            Thread.Sleep(20);
+
+            SetMousePos(Point.Empty);
         }
     }
 }

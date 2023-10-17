@@ -21,7 +21,7 @@ namespace The_BFME_API.BFMERotWK
             }
             catch
             {
-                return "C:/";
+                
             }
 
             return "C:/";
@@ -42,7 +42,7 @@ namespace The_BFME_API.BFMERotWK
             }
             catch
             {
-                return "english";
+                
             }
 
             return "english";
@@ -63,7 +63,7 @@ namespace The_BFME_API.BFMERotWK
             }
             catch
             {
-                return "My Rise of the Witch-king Files";
+                
             }
 
             return "My Rise of the Witch-king Files";

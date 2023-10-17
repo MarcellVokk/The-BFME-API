@@ -111,6 +111,40 @@ namespace The_BFME_API.BFMERotWK
             return new Tuple<int, int>(0, 0);
         }
 
+        public static Bitmap GrabScreen()
+        {
+            Size curentResolution = GameDataManager.GetCurentResolution();
+
+            Bitmap screenshot = new Bitmap(curentResolution.Width, curentResolution.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+
+            Graphics gfxScreenshot = Graphics.FromImage(screenshot);
+
+            Rectangle screen = GetPrimaryScreenBounds();
+
+            gfxScreenshot.CopyFromScreen(screen.X, screen.Y, 0, 0, curentResolution, CopyPixelOperation.SourceCopy);
+
+            gfxScreenshot.Dispose();
+
+            return screenshot;
+        }
+
+        public static Rectangle GetPrimaryScreenBounds()
+        {
+            IntPtr desktop = GetDesktopWindow();
+            IntPtr monitor = MonitorFromWindow(desktop, MONITOR_DEFAULTTOPRIMARY);
+
+            MONITORINFOEX monitorInfo = new MONITORINFOEX();
+            monitorInfo.cbSize = Marshal.SizeOf(monitorInfo);
+
+            if (GetMonitorInfo(monitor, ref monitorInfo))
+            {
+                RECT rc = monitorInfo.rcMonitor;
+                return new Rectangle(rc.Left, rc.Top, rc.Right - rc.Left, rc.Bottom - rc.Top);
+            }
+
+            return Rectangle.Empty;
+        }
+
         [StructLayout(LayoutKind.Sequential)]
         public struct RECT
         {
@@ -141,39 +175,5 @@ namespace The_BFME_API.BFMERotWK
         }
 
         public const int MONITOR_DEFAULTTOPRIMARY = 1;
-
-        public static Rectangle GetPrimaryScreenBounds()
-        {
-            IntPtr desktop = GetDesktopWindow();
-            IntPtr monitor = MonitorFromWindow(desktop, MONITOR_DEFAULTTOPRIMARY);
-
-            MONITORINFOEX monitorInfo = new MONITORINFOEX();
-            monitorInfo.cbSize = Marshal.SizeOf(monitorInfo);
-
-            if (GetMonitorInfo(monitor, ref monitorInfo))
-            {
-                RECT rc = monitorInfo.rcMonitor;
-                return new Rectangle(rc.Left, rc.Top, rc.Right - rc.Left, rc.Bottom - rc.Top);
-            }
-
-            return Rectangle.Empty;
-        }
-
-        public static Bitmap GrabScreen()
-        {
-            Size curentResolution = GameDataManager.GetCurentResolution();
-
-            Bitmap screenshot = new Bitmap(curentResolution.Width, curentResolution.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-
-            Graphics gfxScreenshot = Graphics.FromImage(screenshot);
-
-            Rectangle screen = GetPrimaryScreenBounds();
-
-            gfxScreenshot.CopyFromScreen(screen.X, screen.Y, 0, 0, curentResolution, CopyPixelOperation.SourceCopy);
-
-            gfxScreenshot.Dispose();
-
-            return screenshot;
-        }
     }
 }
