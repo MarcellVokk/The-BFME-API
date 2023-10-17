@@ -6,13 +6,13 @@ The best way is probably to add it via NuGet: https://www.nuget.org/packages/The
 
 ## Supported games
 - BFME1
-- BFME2 (WIP)
-- RotWK (WIP)
+- BFME2
+- RotWK
 
 ## Features
 - Create virtual LAN networks so you and your opponents can play while on completely different networks
 - Launch BFME as host or offhost and automaticaly:
-  - Automaticaly Create ingame room if host or join available ingame room if offhost
+  - Create ingame room if host or join available ingame room if offhost
   - Set player username
   - Set player color
   - Select player army
@@ -22,7 +22,7 @@ The best way is probably to add it via NuGet: https://www.nuget.org/packages/The
   - Select spot on map
   - Select map
   - Start the match
-  - Detect who won the match (this is work in progress)
+  - Detect who won the match (SOON!)
 
 ## Spot detection
 With some pretty clever code, this library is able to automaticaly detect spots from any map, and assign an index to them.
