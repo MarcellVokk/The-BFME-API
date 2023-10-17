@@ -257,8 +257,6 @@ namespace The_BFME_API.Network
 
         private List<string> GetAllCurrentRooms()
         {
-            if (!Initialized) throw new Exception("Not initialized! Call .Init() on client instance after constructor.");
-
             string result = "";
 
             Process? get_ip_process = Process.Start(new ProcessStartInfo("cmd", $@"/C ""{Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "ZeroTier", "One")}\zerotier-one_x64.exe"" -q -j listnetworks") { RedirectStandardOutput = true, CreateNoWindow = true });
